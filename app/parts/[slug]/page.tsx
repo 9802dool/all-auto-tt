@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import NotFound from "@/app/not-found";
 import { AdSlot } from "@/components/ad-slot";
 import { InquiryForm, ReportButton } from "@/components/buyer-forms";
 import { ContactActions } from "@/components/contact-actions";
@@ -47,7 +47,7 @@ export default function PartPage({ params }: { params: Promise<{ slug: string }>
 async function PartBody({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const detail = await cachedPart(slug);
-  if (!detail) notFound();
+  if (!detail) return <NotFound />;
   const { part, similar, reviews } = detail;
   const category = categoryByName(part.category);
   const jsonLd = {

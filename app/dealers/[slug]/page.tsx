@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { connection } from "next/server";
+import NotFound from "@/app/not-found";
 import { Suspense } from "react";
 import { ReviewForm } from "@/components/buyer-forms";
 import { PartCard } from "@/components/part-card";
@@ -52,10 +52,9 @@ async function DealerBody({
   const category = String((await searchParams).category ?? "");
   await connection();
   const record = await cachedDealer(slug);
-  if (!record) notFound();
-  const user = await getCurrentUser();
-  const owns = user?.id === record.dealer.owner_user_id || user?.role === "admin";
-  if (record.dealer.status !== "approved" && !owns) notFound();
+  const user = record ? await getCurrentUser() : null;
+  const owns = Boolean(record && (user?.id === record.dealer.owner_user_id || user?.role === "admin"));
+  if (!record || (record.dealer.status !== "approved" && !owns)) return <NotFound />;
   const dealer = toPublicDealer(record.dealer);
   const parts = record.dealer.status === "approved" ? record.parts : await listDealerParts(record.dealer.id);
   const visible = category ? parts.filter((part) => part.category === category) : parts;

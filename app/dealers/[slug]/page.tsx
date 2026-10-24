@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import { ReviewForm } from "@/components/buyer-forms";
 import { PartCard } from "@/components/part-card";
@@ -49,6 +50,7 @@ async function DealerBody({
 }) {
   const { slug } = await params;
   const category = String((await searchParams).category ?? "");
+  await connection();
   const record = await cachedDealer(slug);
   if (!record) notFound();
   const user = await getCurrentUser();

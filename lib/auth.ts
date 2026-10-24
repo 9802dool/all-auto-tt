@@ -3,6 +3,7 @@ import "server-only";
 import { createHmac, scryptSync, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { getDealerForOwner, getUserById } from "@/lib/data";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -71,6 +72,7 @@ export async function clearSession() {
 }
 
 export async function getCurrentUser() {
+  await connection();
   if (isSupabaseConfigured()) {
     const supabase = await createSupabaseServer();
     const { data } = await supabase!.auth.getUser();

@@ -75,9 +75,11 @@ update public.profiles set role = 'admin' where email = 'you@example.com';
 
 Dealers can update their own row and listings. Triggers stop them changing plan, verification, featured flags and lead counters. Admins can edit every table. Storage bucket `media` is public-read.
 
-The local JSON file is the demo. Production on Vercel should use Supabase. The serverless filesystem does not keep `data/db.json`.
+The local JSON file is the demo. Production on Vercel should use Supabase. Without Supabase, Vercel keeps demo data in `/tmp`, which resets whenever a function instance is recycled.
 
 ## Vercel
+
+Live: https://all-auto-tt.vercel.app (Vercel project `all-auto-tt`). It is not linked to Git yet. Connect a repository under Project Settings → Git so pushes deploy automatically.
 
 1. Import the GitHub repository.
 2. Set the environment variables above. `NEXT_PUBLIC_SITE_URL` should be the production origin, for example `https://allautott.com`.

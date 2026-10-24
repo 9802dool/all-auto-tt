@@ -79,9 +79,9 @@ The local JSON file is the demo. Production on Vercel should use Supabase. Witho
 
 ## Vercel
 
-Live: https://all-auto-tt.vercel.app (Vercel project `all-auto-tt`). It is not linked to Git yet. Connect a repository under Project Settings → Git so pushes deploy automatically.
+Live: https://all-auto-tt.vercel.app (Vercel project `all-auto-tt`, GitHub `9802dool/all-auto-tt`). Pushes to `main` deploy to production.
 
-1. Import the GitHub repository.
+1. The GitHub repository is already imported.
 2. Set the environment variables above. `NEXT_PUBLIC_SITE_URL` should be the production origin, for example `https://allautott.com`.
 3. Set `SESSION_SECRET` and `CRON_SECRET` to long random strings.
 4. Deploy. `vercel.json` calls `/api/cron/maintenance` at 12:00 UTC (8:00am Trinidad) to queue expiry and renewal emails, then send them when `CRON_SECRET` and Resend are set.

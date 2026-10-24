@@ -33,6 +33,8 @@ async function storeBuffer(buffer: Buffer, folder: string, ext: string, contentT
     const { data } = client.storage.from("media").getPublicUrl(name);
     return data.publicUrl;
   }
+  // Vercel's filesystem is read-only, so demo-mode uploads are kept inline until Supabase is configured.
+  if (process.env.VERCEL) return `data:${contentType};base64,${buffer.toString("base64")}`;
   const dir = path.join(process.cwd(), "public", "uploads", folder);
   await mkdir(dir, { recursive: true });
   const filename = path.basename(name);

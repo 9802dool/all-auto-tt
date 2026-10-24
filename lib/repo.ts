@@ -91,7 +91,9 @@ export function usingSupabase() {
 }
 
 function dataFile() {
-  const dir = process.env.DATA_DIR || path.join(process.cwd(), "data");
+  const dir =
+    process.env.DATA_DIR ||
+    (process.env.VERCEL ? path.join("/tmp", "all-auto-tt") : path.join(process.cwd(), "data"));
   return { dir, file: path.join(dir, "db.json") };
 }
 

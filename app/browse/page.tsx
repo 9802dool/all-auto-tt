@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import { AdSlot } from "@/components/ad-slot";
 import { PartCard } from "@/components/part-card";
@@ -28,6 +29,7 @@ async function Results({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const raw = await searchParams;
+  await connection();
   const query = toQuery(raw);
   const [results, catalog] = await Promise.all([searchParts(query), getCatalog()]);
   const initial = {

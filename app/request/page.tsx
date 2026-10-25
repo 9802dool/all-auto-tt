@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
+import { Suspense } from "react";
 import { RequestForm } from "@/components/buyer-forms";
 import { getCatalog } from "@/lib/data";
 
@@ -7,8 +9,7 @@ export const metadata: Metadata = {
   description: "Tell ALL AUTO TT the vehicle and the part. Dealers who stock that make get the request.",
 };
 
-export default async function RequestPage() {
-  const catalog = await getCatalog();
+export default function RequestPage() {
   return (
     <main className="mx-auto grid max-w-3xl gap-6 px-4 py-8">
       <div>
@@ -17,9 +18,19 @@ export default async function RequestPage() {
           If it is not listed, post the vehicle and the part. The request is saved and emailed to dealers who stock that make. Pro and Premium dealers can see your phone and reply on WhatsApp.
         </p>
       </div>
-      <div className="rounded-3xl border border-border bg-white p-5">
-        <RequestForm makes={catalog.makes.map((make) => make.name)} models={catalog.models} />
-      </div>
+      <Suspense fallback={<p className="rounded-3xl border border-border bg-white p-5">Loading the request form…</p>}>
+        <RequestCatalog />
+      </Suspense>
     </main>
+  );
+}
+
+async function RequestCatalog() {
+  await connection();
+  const catalog = await getCatalog();
+  return (
+    <div className="rounded-3xl border border-border bg-white p-5">
+      <RequestForm makes={catalog.makes.map((make) => make.name)} models={catalog.models} />
+    </div>
   );
 }

@@ -1,6 +1,8 @@
+import { connection } from "next/server";
 import { trackAd } from "@/lib/data";
 
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
+  await connection();
   const { id } = await context.params;
   const ad = await trackAd(id, "click");
   const link = ad?.link || "/advertise";

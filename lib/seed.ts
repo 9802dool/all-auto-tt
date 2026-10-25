@@ -48,7 +48,7 @@ function part(
 export function createSeed(): DB {
   const stamp = new Date().toISOString();
   const users = [
-    { id: "u_admin", email: "admin@allautott.com", password_hash: ADMIN_HASH, name: "Platform Admin", phone: "18685550100", role: "admin" as const, created_at: stamp },
+    { id: "u_admin", email: "admin@allautott.com", password_hash: ADMIN_HASH, name: "Platform Admin", phone: "18683224691", role: "admin" as const, created_at: stamp },
     { id: "u_central", email: "akeem@centralparts.example", password_hash: DEALER_HASH, name: "Akeem Ramdass", phone: "18685550101", role: "dealer" as const, created_at: stamp },
     { id: "u_south", email: "lisa@southside.example", password_hash: DEALER_HASH, name: "Lisa Mohammed", phone: "18685550102", role: "dealer" as const, created_at: stamp },
     { id: "u_east", email: "ron@eastyard.example", password_hash: DEALER_HASH, name: "Ron Charles", phone: "18685550103", role: "dealer" as const, created_at: stamp },
@@ -436,7 +436,7 @@ export function createSeed(): DB {
         id: "ad_home",
         title: "Trini Tyre Co. — new and used tyres",
         image: "/ads/trini-tyre.svg",
-        link: "https://wa.me/18685550199",
+        link: "https://wa.me/18683224691",
         placement: "homepage",
         starts_at: daysFromNow(-7, now()),
         ends_at: daysFromNow(21, now()),
@@ -450,7 +450,7 @@ export function createSeed(): DB {
         id: "ad_search",
         title: "Trini Tyre Co. in search results",
         image: "/ads/trini-tyre.svg",
-        link: "https://wa.me/18685550199",
+        link: "https://wa.me/18683224691",
         placement: "search_inline",
         starts_at: daysFromNow(-7, now()),
         ends_at: daysFromNow(21, now()),
@@ -464,7 +464,7 @@ export function createSeed(): DB {
         id: "ad_side",
         title: "Trini Tyre Co. sidebar",
         image: "/ads/trini-tyre.svg",
-        link: "https://wa.me/18685550199",
+        link: "https://wa.me/18683224691",
         placement: "search_sidebar",
         starts_at: daysFromNow(-7, now()),
         ends_at: daysFromNow(21, now()),

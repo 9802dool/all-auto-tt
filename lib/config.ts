@@ -5,8 +5,8 @@ export const brand = {
   domain: "allautott.com",
   url: "https://allautott.com",
   email: "hello@allautott.com",
-  phone: "18685550100",
-  whatsapp: "18685550100",
+  phone: "18683224691",
+  whatsapp: "18683224691",
 } as const;
 
 export const demoAccounts = {

@@ -214,15 +214,33 @@ export async function registerDealer(input: {
   dealer: Omit<Dealer, "id" | "owner_user_id" | "slug" | "status" | "verified" | "plan" | "plan_expires_at" | "plan_reminder_for" | "rating_avg" | "rating_count" | "example" | "created_at">;
 }) {
   return commit((db) => {
-    if (db.users.some((user) => user.email.toLowerCase() === input.user.email.toLowerCase())) {
+    const existingUser = db.users.find((user) => user.email.toLowerCase() === input.user.email.toLowerCase());
+    const existingDealerForUser = db.dealers.find((dealer) => dealer.owner_user_id === input.user.id);
+    
+    if (existingDealerForUser) {
       throw new ActionError("An account with that email already exists.");
     }
+    
+    if (existingUser && existingUser.id !== input.user.id) {
+      throw new ActionError("An account with that email already exists.");
+    }
+    
     const slug = uniqueSlug(db.dealers.map((dealer) => dealer.slug), slugify(input.dealer.business_name));
-    const user = {
-      ...input.user,
-      role: "dealer" as const,
-      created_at: new Date().toISOString(),
-    };
+    let user;
+    
+    if (existingUser) {
+      user = existingUser;
+      user.name = input.user.name;
+      user.phone = input.user.phone;
+    } else {
+      user = {
+        ...input.user,
+        role: "dealer" as const,
+        created_at: new Date().toISOString(),
+      };
+      db.users.push(user);
+    }
+    
     const dealer: Dealer = {
       ...input.dealer,
       id: crypto.randomUUID(),
@@ -238,7 +256,6 @@ export async function registerDealer(input: {
       example: false,
       created_at: new Date().toISOString(),
     };
-    db.users.push(user);
     db.dealers.push(dealer);
     db.emails.push({
       id: crypto.randomUUID(),

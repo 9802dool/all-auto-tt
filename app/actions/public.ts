@@ -79,8 +79,11 @@ export async function signupAction(_state: FormState, formData: FormData): Promi
 
   if (isSupabaseConfigured()) {
     const supabase = await createSupabaseServer();
-    const { data, error } = await supabase!.auth.signUp({ email, password, options: { data: { name: contact } } });
-    if (error) return { error: error.message };
+    const { data, error } = await supabase!.auth.signUp({ email, password, options: { data: { name: contact, phone } } });
+    if (error) {
+      console.error("[signup] Supabase auth.signUp error:", error);
+      return { error: error.message };
+    }
     if (!data.user) return { error: "Check your email to confirm the account, then sign in." };
     const result = await mutate(() =>
       registerDealer({
@@ -103,7 +106,10 @@ export async function signupAction(_state: FormState, formData: FormData): Promi
         },
       }),
     );
-    if (!result.ok) return { error: result.error };
+    if (!result.ok) {
+      console.error("[signup] registerDealer error:", result.error);
+      return { error: result.error };
+    }
     if (!data.session) return { error: "Account created. Confirm the email, then sign in. The shop stays pending until approval." };
     redirect("/dealer?ok=joined");
   }

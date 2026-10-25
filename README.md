@@ -63,14 +63,13 @@ All three Supabase variables must be set together. The app then uses Auth, Postg
 ## Supabase
 
 1. Create a project.
-2. Run `supabase/migrations/0001_init.sql` in the SQL editor.
-3. Run `supabase/seed.sql` for categories, makes and models.
-4. In Authentication, turn off email confirmation if you want sign-up to land straight in the dashboard.
-5. Put the URL, anon key and service role key in `.env.local`.
-6. Promote a profile to admin after that person signs up:
+2. Paste `supabase/schema.sql` into the SQL editor and run it. That file creates the tables, row-level security, the `media` bucket, the admin check, and the category catalog.
+3. In Authentication, turn off email confirmation if you want sign-up to land straight in the dashboard.
+4. Put the URL, anon key and service role key in `.env.local`.
+5. After that person signs up, promote them:
 
 ```sql
-update public.profiles set role = 'admin' where email = 'you@example.com';
+select public.grant_admin('you@example.com');
 ```
 
 Dealers can update their own row and listings. Triggers stop them changing plan, verification, featured flags and lead counters. Admins can edit every table. Storage bucket `media` is public-read.

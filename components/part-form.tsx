@@ -164,7 +164,7 @@ export function PartForm({
         <div className="flex flex-wrap gap-2">
           {kept.map((photo) => (
             <figure key={photo} className="relative">
-              <img src={photo} alt="" className="size-20 rounded-lg object-cover" />
+              <img src={photo} alt="Part photo" className="size-20 rounded-lg object-cover" />
               <button
                 type="button"
                 className="absolute -top-2 -right-2 rounded-full bg-charcoal px-2 text-xs text-white"
@@ -175,7 +175,7 @@ export function PartForm({
             </figure>
           ))}
           {previews.map((photo) => (
-            <img key={photo.url} src={photo.url} alt="" className="size-20 rounded-lg object-cover" />
+            <img key={photo.url} src={photo.url} alt="Part photo preview" className="size-20 rounded-lg object-cover" />
           ))}
         </div>
         <input

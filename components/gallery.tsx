@@ -25,7 +25,7 @@ export function Gallery({ photos, title }: { photos: string[]; title: string }) 
               className={`relative size-20 shrink-0 overflow-hidden rounded-xl border ${index === active ? "border-orange" : "border-transparent"}`}
               onClick={() => setActive(index)}
             >
-              <PartImage src={photo} alt="" sizes="80px" />
+              <PartImage src={photo} alt={`${title} photo ${index + 1}`} sizes="80px" />
             </button>
           ))}
         </div>

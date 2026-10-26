@@ -66,7 +66,7 @@ async function DealerBody({
   return (
     <main>
       <div className="relative h-48 bg-charcoal sm:h-64">
-        {record.dealer.cover ? <img src={record.dealer.cover} alt="" className="h-full w-full object-cover opacity-70" /> : null}
+        {record.dealer.cover ? <img src={record.dealer.cover} alt={`${dealer.business_name} cover`} className="h-full w-full object-cover opacity-70" /> : null}
       </div>
       <div className="mx-auto max-w-6xl px-4">
         <div className="-mt-10 rounded-3xl border border-border bg-white p-5">
@@ -74,7 +74,7 @@ async function DealerBody({
             <p className="mb-3 rounded-xl bg-amber-100 px-3 py-2 text-sm">Preview only. Buyers cannot see this shop until it is approved.</p>
           ) : null}
           <div className="flex flex-wrap items-center gap-4">
-            {dealer.logo ? <img src={dealer.logo} alt="" className="size-16 rounded-2xl" /> : null}
+            {dealer.logo ? <img src={dealer.logo} alt={`${dealer.business_name} logo`} className="size-16 rounded-2xl" /> : null}
             <div>
               <h1 className="font-display text-4xl font-extrabold uppercase">{dealer.business_name}</h1>
               <p className="text-sm text-muted-foreground">{dealer.region} · {dealer.hours}</p>

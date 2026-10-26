@@ -51,7 +51,6 @@ async function Body({ searchParams }: { searchParams: Query }) {
         <aside className="rounded-2xl border border-border bg-white p-4 text-sm">
           <p className="font-semibold">Local demo, no Supabase keys</p>
           <ul className="mt-2 space-y-1">
-            <li>Admin: {demoAccounts.admin.email} / {demoAccounts.admin.password}</li>
             <li>Pro dealer: akeem@centralparts.example / {demoAccounts.dealer.password}</li>
             <li>Premium dealer: lisa@southside.example / {demoAccounts.dealer.password}</li>
             <li>Free dealer: ron@eastyard.example / {demoAccounts.dealer.password}</li>

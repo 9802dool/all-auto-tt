@@ -10,7 +10,6 @@ export const brand = {
 } as const;
 
 export const demoAccounts = {
-  admin: { email: "admin@allautott.com", password: "demo-admin", name: "Platform Admin" },
   dealer: { password: "demo-dealer" },
 } as const;
 
@@ -139,11 +138,11 @@ export const adRates = [
 ];
 
 export const bank = {
-  bank: "Republic Bank Limited",
-  name: "ALL AUTO TT",
-  account: "080 123 456 789",
-  type: "Chequing (TTD)",
-  note: "Put your business name as the transfer reference. This account number is a placeholder until the live account is connected.",
+  bank: "First Citizens Bank (FCB)",
+  name: "Simeon Doolarsingh",
+  account: "2344535",
+  type: "Savings",
+  note: "Put your business name as the transfer reference.",
 };
 
 export const reportReasons = [

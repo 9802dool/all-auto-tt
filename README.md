@@ -21,7 +21,6 @@ Shown on the sign-in page while Supabase is unset.
 
 | Who | Email | Password |
 | --- | --- | --- |
-| Platform admin | admin@allautott.com | demo-admin |
 | Pro dealer, Chaguanas | akeem@centralparts.example | demo-dealer |
 | Premium dealer, San Fernando | lisa@southside.example | demo-dealer |
 | Free dealer, Arima | ron@eastyard.example | demo-dealer |
@@ -37,8 +36,6 @@ Shown on the sign-in page while Supabase is unset.
 - Admin: approve Crown Point, mark East Yard's pending transfer paid, moderate a report, schedule an ad or Dealer of the Month, copy the daily digest.
 - Share kit: square and story images, storefront QR, PDF flyer, and `/api/flyers/mechanics`.
 - `/new`, `/feed.xml`, `/feed.json`, `/toyota/gearboxes`, `/sitemap.xml`.
-
-The bank account in the billing screen is a placeholder.
 
 ## Environment
 

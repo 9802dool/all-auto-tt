@@ -3,7 +3,7 @@
 -- 1. Creates a private 'receipts' bucket for payment receipts
 -- 2. Adds storage policies for receipts (dealer + admin only)
 -- 3. Adds size/type limits to the media bucket
--- 4. Revokes EXECUTE from public/anon/authenticated for security definer functions
+-- 4. Revokes EXECUTE from public/anon/authenticated for trigger functions
 
 -- ---------------------------------------------------------------------------
 -- 1. Create private receipts bucket
@@ -61,17 +61,12 @@ set
 where id = 'media';
 
 -- ---------------------------------------------------------------------------
--- 3. Revoke EXECUTE from anon/authenticated for security definer functions
+-- 3. Revoke EXECUTE from anon/authenticated for trigger functions
 -- ---------------------------------------------------------------------------
 
--- These functions are only meant to be called by triggers or used internally by RLS policies.
--- Revoking execute prevents them from being called directly via the API (/rest/v1/rpc/...).
-
-revoke execute on function public.is_admin() from anon, authenticated, public;
-grant execute on function public.is_admin() to service_role;
-
-revoke execute on function public.owns_dealer(text) from anon, authenticated, public;
-grant execute on function public.owns_dealer(text) to service_role;
+-- These trigger functions should only be called by database triggers, not via the API.
+-- Note: is_admin() and owns_dealer() are NOT revoked because RLS policies need to call them,
+-- and policies run as the calling role (anon/authenticated) so they need EXECUTE permission.
 
 revoke execute on function public.protect_dealer_fields() from anon, authenticated, public;
 grant execute on function public.protect_dealer_fields() to service_role;
@@ -81,6 +76,3 @@ grant execute on function public.protect_part_fields() to service_role;
 
 revoke execute on function public.handle_new_user() from anon, authenticated, public;
 grant execute on function public.handle_new_user() to service_role;
-
--- Note: RLS policies can still call these functions internally because they run
--- with elevated privileges. Only direct API calls via /rest/v1/rpc/... are blocked.

@@ -2,7 +2,6 @@ import { categories, makes, regions } from "@/lib/config";
 import { daysFromNow, slugify } from "@/lib/format";
 import type { DB, Dealer, Part, PartRequest, Payment, Review } from "@/lib/types";
 
-const ADMIN_HASH = "allautott-admin-salt:639c0185a6b81b610693a5436c3607893ea2adf8a0972a2682a742a2bd6c5d91";
 const DEALER_HASH = "allautott-dealer-salt:4047581f51e9f3abd918e1041b04c11f94863d1268ff5534b71de5308d0f50b2";
 
 const now = () => Date.now();
@@ -48,7 +47,6 @@ function part(
 export function createSeed(): DB {
   const stamp = new Date().toISOString();
   const users = [
-    { id: "u_admin", email: "allautott@gmail.com", password_hash: ADMIN_HASH, name: "Platform Admin", phone: "18683224691", role: "admin" as const, created_at: stamp },
     { id: "u_central", email: "akeem@centralparts.example", password_hash: DEALER_HASH, name: "Akeem Ramdass", phone: "18685550101", role: "dealer" as const, created_at: stamp },
     { id: "u_south", email: "lisa@southside.example", password_hash: DEALER_HASH, name: "Lisa Mohammed", phone: "18685550102", role: "dealer" as const, created_at: stamp },
     { id: "u_east", email: "ron@eastyard.example", password_hash: DEALER_HASH, name: "Ron Charles", phone: "18685550103", role: "dealer" as const, created_at: stamp },

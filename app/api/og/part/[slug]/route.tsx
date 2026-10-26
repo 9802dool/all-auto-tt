@@ -34,7 +34,7 @@ export async function GET(request: Request, context: { params: Promise<{ slug: s
           fontFamily: "sans-serif",
         }}
       >
-        <img src={photo} width={width} height={photoHeight} style={{ objectFit: "cover", width, height: photoHeight }} />
+        <img src={photo} alt={part.title} width={width} height={photoHeight} style={{ objectFit: "cover", width, height: photoHeight }} />
         <div
           style={{
             display: "flex",

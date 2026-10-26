@@ -55,7 +55,7 @@ async function PartsBody({ searchParams }: { searchParams: Query }) {
         <ul className="grid gap-3">
           {dash.parts.map((part) => (
             <li key={part.id} className="grid gap-3 rounded-2xl border border-border bg-white p-3 sm:grid-cols-[88px_1fr]">
-              <img src={part.photos[0] || "/parts/workshop.jpg"} alt="" className="aspect-square w-full rounded-xl object-cover sm:size-22" />
+              <img src={part.photos[0] || "/parts/workshop.jpg"} alt={part.title} className="aspect-square w-full rounded-xl object-cover sm:size-22" />
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <h2 className="font-display text-2xl leading-none font-bold uppercase">{part.title}</h2>

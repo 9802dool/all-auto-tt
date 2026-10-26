@@ -6,7 +6,7 @@ export function SiteFooter() {
     <footer className="mt-auto bg-charcoal text-white">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <img src="/logo.svg" alt="" className="h-9 w-auto brightness-0 invert" />
+          <img src="/logo.svg" alt="ALL AUTO TT logo" className="h-9 w-auto brightness-0 invert" />
           <p className="mt-3 max-w-xs text-sm text-zinc-300">{brand.tagline}</p>
         </div>
         <div>

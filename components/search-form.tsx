@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { controlClass } from "@/components/field";
 import { conditions, regions } from "@/lib/config";
@@ -40,15 +40,7 @@ export function SearchForm({
     () => catalog.models.filter((item) => !make || item.make === make),
     [catalog.models, make],
   );
-  const [yearOptions, setYearOptions] = useState<number[]>(() => {
-    const list: number[] = [];
-    // Fixed span so prerender does not read the clock. The effect below replaces it.
-    for (let year = 2027; year >= 1998; year -= 1) list.push(year);
-    return list;
-  });
-  useEffect(() => {
-    setYearOptions(years());
-  }, []);
+  const yearOptions = useMemo(() => years(), []);
 
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     for (const element of event.currentTarget.elements) {

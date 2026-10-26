@@ -122,7 +122,7 @@ async function PartBody({ params }: { params: Promise<{ slug: string }> }) {
         </section>
         <aside className="rounded-3xl border border-border bg-white p-5">
           <div className="flex items-center gap-3">
-            {part.dealer.logo ? <img src={part.dealer.logo} alt="" className="size-14 rounded-xl" /> : null}
+            {part.dealer.logo ? <img src={part.dealer.logo} alt={`${part.dealer.business_name} logo`} className="size-14 rounded-xl" /> : null}
             <div>
               <h2 className="text-lg font-semibold">{part.dealer.business_name}</h2>
               <p className="text-sm text-muted-foreground">{part.dealer.region}</p>

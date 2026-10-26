@@ -13,7 +13,7 @@ export default async function HomePage() {
   return (
     <main>
       <section className="relative overflow-hidden bg-charcoal text-white">
-        <img src="/parts/hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-40" />
+        <img src="/parts/hero.jpg" alt="Auto parts hero" className="absolute inset-0 h-full w-full object-cover opacity-40" />
         <div className="relative mx-auto max-w-6xl px-4 py-14 sm:py-20">
           <p className="font-display text-sm tracking-[0.2em] text-orange uppercase">Used parts · Trinidad & Tobago</p>
           <h1 className="mt-3 max-w-3xl font-display text-5xl leading-[0.9] font-extrabold tracking-tight uppercase sm:text-7xl">
@@ -114,7 +114,7 @@ export default async function HomePage() {
           {home.dealers.map((dealer) => (
             <Link key={dealer.id} href={`/dealers/${dealer.slug}`} className="w-72 shrink-0 snap-start rounded-2xl border border-border bg-white p-4">
               <div className="flex items-center gap-3">
-                {dealer.logo ? <img src={dealer.logo} alt="" className="size-12 rounded-xl" /> : null}
+                {dealer.logo ? <img src={dealer.logo} alt={`${dealer.business_name} logo`} className="size-12 rounded-xl" /> : null}
                 <div>
                   <p className="font-semibold">{dealer.business_name}</p>
                   <p className="text-sm text-muted-foreground">{dealer.region}</p>

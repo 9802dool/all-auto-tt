@@ -14,7 +14,7 @@ export default async function DealersPage() {
         {dealers.map((dealer) => (
           <Link key={dealer.id} href={`/dealers/${dealer.slug}`} className="rounded-3xl border border-border bg-white p-5">
             <div className="flex items-center gap-3">
-              {dealer.logo ? <img src={dealer.logo} alt="" className="size-14 rounded-2xl" /> : null}
+              {dealer.logo ? <img src={dealer.logo} alt={`${dealer.business_name} logo`} className="size-14 rounded-2xl" /> : null}
               <div>
                 <h2 className="text-xl font-semibold">{dealer.business_name}</h2>
                 <p className="text-sm text-muted-foreground">{dealer.region} · {dealer.listings} live parts</p>

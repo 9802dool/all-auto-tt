@@ -476,7 +476,7 @@ export function createSeed(): DB {
         id: "ad_part",
         title: "Island Cover insurance",
         image: "/ads/island-cover.svg",
-        link: "https://allautott.com/advertise",
+        link: `${process.env.NEXT_PUBLIC_SITE_URL || "https://all-auto-tt-bice.vercel.app"}/advertise`,
         placement: "part_page",
         starts_at: daysFromNow(-3, now()),
         ends_at: daysFromNow(27, now()),

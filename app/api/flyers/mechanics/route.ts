@@ -15,7 +15,7 @@ export async function GET() {
       brand.tagline,
     ],
     url: siteUrl(),
-    footer: "Scan to browse allautott.com",
+    footer: `Scan to browse ${siteUrl().replace(/^https?:\/\//, "")}`,
   });
   return new Response(Buffer.from(pdf), {
     headers: {

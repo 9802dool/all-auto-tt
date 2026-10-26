@@ -27,7 +27,7 @@ export async function deliverEmail(message: EmailMessage) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: process.env.EMAIL_FROM || "ALL AUTO TT <parts@allautott.com>",
+      from: process.env.EMAIL_FROM || "ALL AUTO TT <allautott@gmail.com>",
       to: [message.to],
       subject: message.subject,
       text: message.body,

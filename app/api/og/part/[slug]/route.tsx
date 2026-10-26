@@ -4,6 +4,7 @@ import path from "node:path";
 import { ImageResponse } from "next/og";
 import { formatTTD } from "@/lib/format";
 import { loadDb } from "@/lib/repo";
+import { siteUrl } from "@/lib/config";
 
 export async function GET(request: Request, context: { params: Promise<{ slug: string }> }) {
   await connection();
@@ -61,7 +62,7 @@ export async function GET(request: Request, context: { params: Promise<{ slug: s
           <div style={{ display: "flex", fontSize: story ? 64 : 48, fontWeight: 800, marginTop: 24 }}>{part.title}</div>
           <div style={{ display: "flex", fontSize: 56, fontWeight: 800, color: "#F97316", marginTop: 16 }}>{price}</div>
           <div style={{ display: "flex", fontSize: 32, color: "#e5e7eb", marginTop: 16 }}>{place}</div>
-          <div style={{ display: "flex", fontSize: 28, color: "#d1d5db", marginTop: 28 }}>allautott.com</div>
+          <div style={{ display: "flex", fontSize: 28, color: "#d1d5db", marginTop: 28 }}>{siteUrl().replace(/^https?:\/\//, "")}</div>
         </div>
       </div>
     ),

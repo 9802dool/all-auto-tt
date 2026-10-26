@@ -4,7 +4,7 @@ export const brand = {
   tagline: "Every Part. Every Dealer. All Trinidad & Tobago.",
   domain: "allautott.com",
   url: "https://allautott.com",
-  email: "hello@allautott.com",
+  email: "allautott@gmail.com",
   phone: "18683224691",
   whatsapp: "18683224691",
 } as const;

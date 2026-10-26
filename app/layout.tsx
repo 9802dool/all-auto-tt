@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-TT" className={`${outfit.variable} ${display.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-paper text-foreground">

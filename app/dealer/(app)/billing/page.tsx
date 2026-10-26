@@ -8,6 +8,7 @@ import { requireDealer } from "@/lib/auth";
 import { bank, plans } from "@/lib/config";
 import { dealerDashboard } from "@/lib/data";
 import { firstParam, formatDate, formatTTD } from "@/lib/format";
+import { getSignedReceiptUrl } from "@/lib/uploads";
 
 export const metadata: Metadata = { title: "Plan and receipts" };
 
@@ -26,6 +27,15 @@ async function Body({ searchParams }: { searchParams: Query }) {
   if (!dealer) return null;
   const [dash, query] = await Promise.all([dealerDashboard(dealer.id), searchParams]);
   const pending = dash.payments.filter((payment) => payment.status === "pending");
+  
+  // Generate signed URLs for receipts owned by this dealer
+  const paymentsWithSignedUrls = await Promise.all(
+    dash.payments.map(async (payment) => ({
+      ...payment,
+      signedReceiptUrl: await getSignedReceiptUrl(payment.receipt_url),
+    }))
+  );
+  
   return (
     <>
       <h1 className="font-display text-4xl font-extrabold uppercase">Plan and receipts</h1>
@@ -81,17 +91,17 @@ async function Body({ searchParams }: { searchParams: Query }) {
       </section>
       <section>
         <h2 className="font-display text-2xl font-bold uppercase">History</h2>
-        {dash.payments.length === 0 ? (
+        {paymentsWithSignedUrls.length === 0 ? (
           <p className="mt-2 text-sm text-muted-foreground">No payments yet.</p>
         ) : (
           <ul className="mt-2 grid gap-2">
-            {dash.payments.map((payment) => (
+            {paymentsWithSignedUrls.map((payment) => (
               <li key={payment.id} className="rounded-2xl border border-border bg-white px-4 py-3 text-sm">
                 <span className="font-semibold">{payment.note || payment.plan}</span> · {formatTTD(payment.amount_ttd)} · {payment.status}
-                {payment.receipt_url ? (
+                {payment.signedReceiptUrl ? (
                   <>
                     {" "}
-                    · <a className="font-semibold text-orange-ink" href={payment.receipt_url}>Receipt</a>
+                    · <a className="font-semibold text-orange-ink" href={payment.signedReceiptUrl} target="_blank" rel="noopener noreferrer">Receipt</a>
                   </>
                 ) : null}
               </li>

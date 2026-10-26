@@ -4,13 +4,13 @@ export const brand = {
   tagline: "Every Part. Every Dealer. All Trinidad & Tobago.",
   domain: "allautott.com",
   url: "https://allautott.com",
-  email: "hello@allautott.com",
+  email: "allautott@gmail.com",
   phone: "18683224691",
   whatsapp: "18683224691",
 } as const;
 
 export const demoAccounts = {
-  admin: { email: "admin@allautott.com", password: "demo-admin", name: "Platform Admin" },
+  admin: { email: "allautott@gmail.com", password: "demo-admin", name: "Platform Admin" },
   dealer: { password: "demo-dealer" },
 } as const;
 

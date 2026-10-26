@@ -6,6 +6,7 @@ import { SubmitButton } from "@/components/submit-button";
 import { requireAdmin } from "@/lib/auth";
 import { listEverything } from "@/lib/data";
 import { firstParam, formatDateTime, formatTTD } from "@/lib/format";
+import { getSignedReceiptUrl } from "@/lib/uploads";
 
 export const metadata: Metadata = { title: "Payments" };
 
@@ -23,6 +24,15 @@ async function Body({ searchParams }: { searchParams: Query }) {
   await requireAdmin();
   const [data, query] = await Promise.all([listEverything(), searchParams]);
   const dealers = new Map(data.dealers.map((dealer) => [dealer.id, dealer.business_name]));
+  
+  // Generate signed URLs for all receipts
+  const receiptsWithSignedUrls = await Promise.all(
+    data.payments.map(async (payment) => ({
+      ...payment,
+      signedReceiptUrl: await getSignedReceiptUrl(payment.receipt_url),
+    }))
+  );
+  
   return (
     <>
       <h1 className="font-display text-4xl font-extrabold uppercase">Payments</h1>
@@ -30,15 +40,15 @@ async function Body({ searchParams }: { searchParams: Query }) {
       <Flash ok={firstParam(query.ok)} error={firstParam(query.error)} />
       {data.payments.length === 0 ? <p>No payments yet.</p> : null}
       <ul className="grid gap-3">
-        {data.payments.map((payment) => (
+        {receiptsWithSignedUrls.map((payment) => (
           <li key={payment.id} className="rounded-2xl border border-border bg-white p-4 text-sm">
             <p className="font-semibold">{dealers.get(payment.dealer_id) ?? payment.dealer_id}</p>
             <p>
               {payment.note || payment.plan} · {formatTTD(payment.amount_ttd)} · {payment.method} · {payment.status} · {formatDateTime(payment.created_at)}
             </p>
             {payment.period_end ? <p>Period ends {payment.period_end.slice(0, 10)}</p> : null}
-            {payment.receipt_url ? (
-              <a className="font-semibold text-orange-ink" href={payment.receipt_url}>Open receipt</a>
+            {payment.signedReceiptUrl ? (
+              <a className="font-semibold text-orange-ink" href={payment.signedReceiptUrl} target="_blank" rel="noopener noreferrer">Open receipt</a>
             ) : (
               <p className="text-muted-foreground">No receipt uploaded.</p>
             )}

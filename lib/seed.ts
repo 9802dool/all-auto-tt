@@ -48,7 +48,7 @@ function part(
 export function createSeed(): DB {
   const stamp = new Date().toISOString();
   const users = [
-    { id: "u_admin", email: "admin@allautott.com", password_hash: ADMIN_HASH, name: "Platform Admin", phone: "18683224691", role: "admin" as const, created_at: stamp },
+    { id: "u_admin", email: "allautott@gmail.com", password_hash: ADMIN_HASH, name: "Platform Admin", phone: "18683224691", role: "admin" as const, created_at: stamp },
     { id: "u_central", email: "akeem@centralparts.example", password_hash: DEALER_HASH, name: "Akeem Ramdass", phone: "18685550101", role: "dealer" as const, created_at: stamp },
     { id: "u_south", email: "lisa@southside.example", password_hash: DEALER_HASH, name: "Lisa Mohammed", phone: "18685550102", role: "dealer" as const, created_at: stamp },
     { id: "u_east", email: "ron@eastyard.example", password_hash: DEALER_HASH, name: "Ron Charles", phone: "18685550103", role: "dealer" as const, created_at: stamp },
@@ -478,7 +478,7 @@ export function createSeed(): DB {
         id: "ad_part",
         title: "Island Cover insurance",
         image: "/ads/island-cover.svg",
-        link: "https://allautott.com/advertise",
+        link: `${process.env.NEXT_PUBLIC_SITE_URL || "https://all-auto-tt-bice.vercel.app"}/advertise`,
         placement: "part_page",
         starts_at: daysFromNow(-3, now()),
         ends_at: daysFromNow(27, now()),

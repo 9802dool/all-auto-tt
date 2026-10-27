@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SiteLogo } from "@/components/site-logo";
 import { brand } from "@/lib/config";
 
 export function SiteFooter() {
@@ -6,7 +7,7 @@ export function SiteFooter() {
     <footer className="mt-auto bg-charcoal text-white">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-5">
         <div>
-          <img src="/logo.svg" alt="ALL AUTO TT logo" className="h-9 w-auto brightness-0 invert" />
+          <SiteLogo variant="footer" />
           <p className="mt-3 max-w-xs text-sm text-zinc-300">{brand.tagline}</p>
         </div>
         <div>

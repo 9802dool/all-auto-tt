@@ -7,7 +7,11 @@ import { SearchForm } from "@/components/search-form";
 import { getCatalog, searchParts } from "@/lib/data";
 import { browseHref, toQuery } from "@/lib/search";
 
-export const metadata = { title: "Browse used parts in Trinidad & Tobago" };
+export const metadata = {
+  title: "Browse used parts in Trinidad & Tobago",
+  description:
+    "Search engines, gearboxes, body parts and more from scrapyards and foreign-used dealers across Trinidad and Tobago. WhatsApp the dealer and pay on pickup.",
+};
 
 export default function BrowsePage({
   searchParams,

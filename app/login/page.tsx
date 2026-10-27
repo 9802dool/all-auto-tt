@@ -8,7 +8,10 @@ import { demoAccounts } from "@/lib/config";
 import { firstParam, safeNext } from "@/lib/format";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
-export const metadata: Metadata = { title: "Sign in" };
+export const metadata: Metadata = {
+  title: "Sign in",
+  description: "Sign in to your ALL AUTO TT dealer dashboard or admin console.",
+};
 
 type Query = Promise<Record<string, string | string[] | undefined>>;
 

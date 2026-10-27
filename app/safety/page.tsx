@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Buyer safety" };
+export const metadata: Metadata = {
+  title: "Buyer safety",
+  description:
+    "How to inspect used parts, pay dealers safely on pickup, and report misleading listings on ALL AUTO TT in Trinidad and Tobago.",
+};
 
 export default function SafetyPage() {
   return (

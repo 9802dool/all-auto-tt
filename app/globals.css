@@ -11,9 +11,9 @@
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-heading: var(--font-barlow), Impact, sans-serif;
   --font-display: var(--font-barlow), Impact, sans-serif;
-  --color-orange: #f97316;
-  --color-orange-ink: #9a3412;
-  --color-charcoal: #111827;
+  --color-orange: #f26b1d;
+  --color-orange-ink: #c24f12;
+  --color-charcoal: #1f1f1f;
   --color-whatsapp: #075e54;
   --color-paper: #f4f1ec;
   --color-sidebar-ring: var(--sidebar-ring);
@@ -56,12 +56,12 @@
 
 :root {
   --background: #f4f1ec;
-  --foreground: #111827;
+  --foreground: #1f1f1f;
   --card: #ffffff;
   --card-foreground: #111827;
   --popover: #ffffff;
   --popover-foreground: #111827;
-  --primary: #111827;
+  --primary: #1f1f1f;
   --primary-foreground: #ffffff;
   --secondary: #fff4eb;
   --secondary-foreground: #9a3412;
@@ -72,7 +72,7 @@
   --destructive: #b91c1c;
   --border: #e6e0d6;
   --input: #e6e0d6;
-  --ring: #f97316;
+  --ring: #f26b1d;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);

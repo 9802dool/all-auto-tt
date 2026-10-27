@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { cachedDealers } from "@/lib/catalog";
 
-export const metadata: Metadata = { title: "Parts dealers in Trinidad & Tobago" };
+export const metadata: Metadata = {
+  title: "Parts dealers in Trinidad & Tobago",
+  description:
+    "Directory of approved parts yards and shops in Trinidad and Tobago. Open a storefront, browse stock, and contact dealers on WhatsApp.",
+};
 
 export default async function DealersPage() {
   const dealers = await cachedDealers();

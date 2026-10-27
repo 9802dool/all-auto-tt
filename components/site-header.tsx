@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { MobileNav } from "@/components/mobile-nav";
+import { SiteLogo } from "@/components/site-logo";
 import { buttonVariants } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 import { brand } from "@/lib/config";
@@ -25,9 +26,7 @@ export function SiteHeader() {
         </div>
       </div>
       <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
-        <Link href="/" className="shrink-0">
-          <img src="/logo.svg" alt="ALL AUTO TT" className="h-10 w-auto" />
-        </Link>
+        <SiteLogo variant="header" className="min-w-0" />
         <nav className="ml-4 hidden items-center gap-5 text-sm font-semibold md:flex" aria-label="Primary">
           {links.map(([href, label]) => (
             <Link key={href} href={href} className="hover:text-orange-ink">

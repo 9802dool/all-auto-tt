@@ -35,7 +35,18 @@ export const metadata: Metadata = {
     siteName: brand.name,
     locale: "en_TT",
     type: "website",
-    images: ["/parts/hero.jpg"],
+    images: [
+      {
+        url: "/brand/all-auto-tt-logo.jpg",
+        width: 1024,
+        height: 1024,
+        alt: "ALL AUTO TT — used car parts in Trinidad and Tobago",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/brand/all-auto-tt-logo.jpg"],
   },
 };
 

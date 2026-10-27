@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { AdSlot } from "@/components/ad-slot";
 import { CategoryIcon } from "@/components/category-icon";
@@ -7,6 +8,12 @@ import { buttonVariants } from "@/components/ui/button";
 import { cachedHome } from "@/lib/catalog";
 import { brand, popularMakes, slugifyMake } from "@/lib/config";
 import { cn } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: "ALL AUTO TT — Used car parts in Trinidad & Tobago",
+  description:
+    "Find used engines, gearboxes and foreign-used parts in Trinidad and Tobago. Browse every dealer, WhatsApp them, and pay on pickup.",
+};
 
 export default async function HomePage() {
   const { home, catalog } = await cachedHome();

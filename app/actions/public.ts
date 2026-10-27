@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { hashPassword, setSession, verifyPassword, clearSession } from "@/lib/auth";
 import { digits, safeNext } from "@/lib/format";
-import { regionPoint, reportReasons } from "@/lib/config";
+import { otherMakeValue, regionPoint, reportReasons } from "@/lib/config";
 import { createInquiry, createReport, createRequest, createReview, getDealerForOwner, getUserByEmail, registerDealer } from "@/lib/data";
 import { mutate } from "@/lib/mutate";
 import { createSupabaseServer } from "@/lib/supabase/server";
@@ -179,12 +179,12 @@ export async function reportAction(_state: FormState, formData: FormData): Promi
 export async function requestAction(_state: FormState, formData: FormData): Promise<FormState> {
   const name = text(formData, "name", 80);
   const phone = digits(text(formData, "phone", 30));
-  const make = text(formData, "make", 40);
+  const make = text(formData, "make", 40).replace(/\s+/g, " ");
   const model = text(formData, "model", 40);
   const year = text(formData, "year", 4);
   const part = text(formData, "part", 120);
   const notes = text(formData, "notes", 500);
-  if (name.length < 2 || phone.length < 11 || !make || part.length < 2) {
+  if (name.length < 2 || phone.length < 11 || make.length < 2 || make === otherMakeValue || part.length < 2) {
     return { error: "Name, phone, make and the part you need are required." };
   }
   const result = await mutate(() => createRequest({ name, phone, make, model, year, part, notes }));

@@ -5,6 +5,8 @@ import { savePartAction } from "@/app/actions/dealer";
 import type { FormState } from "@/app/actions/types";
 import { Field, controlClass } from "@/components/field";
 import { SubmitButton } from "@/components/submit-button";
+import { otherMakeValue } from "@/lib/config";
+import { resolveMakeChoice } from "@/lib/search";
 import type { Part } from "@/lib/types";
 
 const empty: FormState = {};
@@ -33,13 +35,17 @@ export function PartForm({
   location: string;
 }) {
   const [state, action] = useActionState(savePartAction, empty);
-  const [make, setMake] = useState(part?.make ?? catalog.makes[0]?.name ?? "");
+  const knownMakes = catalog.makes.map((item) => item.name);
+  const startingMake = resolveMakeChoice(part?.make, knownMakes, knownMakes[0] ?? otherMakeValue);
+  const [makeChoice, setMakeChoice] = useState(startingMake.choice);
+  const [customMake, setCustomMake] = useState(startingMake.custom);
+  const isOther = makeChoice === otherMakeValue;
   const [kept, setKept] = useState(part?.photos ?? []);
   const [previews, setPreviews] = useState<{ name: string; url: string }[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
   const models = useMemo(
-    () => catalog.models.filter((model) => model.make === make).map((model) => model.name),
-    [catalog.models, make],
+    () => (isOther ? [] : catalog.models.filter((model) => model.make === makeChoice).map((model) => model.name)),
+    [catalog.models, isOther, makeChoice],
   );
 
   async function onPhotos(list: FileList | null) {
@@ -89,16 +95,34 @@ export function PartForm({
         <Field label="Make">
           <select
             className={controlClass}
-            name="make"
+            name={isOther ? undefined : "make"}
             required
-            value={make}
-            onChange={(event) => setMake(event.target.value)}
+            value={makeChoice}
+            onChange={(event) => setMakeChoice(event.target.value)}
           >
             {catalog.makes.map((item) => (
-              <option key={item.name}>{item.name}</option>
+              <option key={item.name} value={item.name}>
+                {item.name}
+              </option>
             ))}
+            <option value={otherMakeValue}>Other make</option>
           </select>
         </Field>
+        {isOther ? (
+          <Field label="Type the make" hint="For BMW, Mercedes, and any make that is not in the list." className="sm:col-span-2">
+            <input
+              className={controlClass}
+              name="make"
+              required
+              minLength={2}
+              maxLength={40}
+              value={customMake}
+              onChange={(event) => setCustomMake(event.target.value)}
+              placeholder="BMW"
+              autoComplete="off"
+            />
+          </Field>
+        ) : null}
         <Field label="Model">
           <input className={controlClass} name="model" list="model-list" defaultValue={part?.model ?? ""} placeholder="Axio" />
           <datalist id="model-list">

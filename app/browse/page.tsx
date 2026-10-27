@@ -3,9 +3,13 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import { AdSlot } from "@/components/ad-slot";
 import { PartCard } from "@/components/part-card";
+import { RequestPartButton } from "@/components/request-part-button";
 import { SearchForm } from "@/components/search-form";
+import { brand } from "@/lib/config";
 import { getCatalog, searchParts } from "@/lib/data";
+import { formatPhone } from "@/lib/format";
 import { browseHref, toQuery } from "@/lib/search";
+import type { PartQuery } from "@/lib/types";
 
 export const metadata = {
   title: "Browse used parts in Trinidad & Tobago",
@@ -49,6 +53,14 @@ async function Results({
     sort: query.sort,
   };
   const pages = Math.max(1, Math.ceil(results.total / results.pageSize));
+  const requestSearch = {
+    make: query.make,
+    model: query.model,
+    year: query.year,
+    part: query.category,
+    keywords: query.q,
+  };
+  const summary = searchSummary(query);
   const hrefQuery = {
     make: query.make,
     model: query.model,
@@ -85,16 +97,38 @@ async function Results({
           <AdSlot placement="search_sidebar" />
         </div>
       </aside>
-      <section>
+      <section className={results.items.length ? undefined : "max-lg:order-first"}>
         {results.items.length ? (
           <div className="grid gap-4 sm:grid-cols-2">{cards}</div>
         ) : (
-          <div className="rounded-3xl border border-dashed bg-white p-8">
-            <h2 className="font-display text-3xl font-bold uppercase">No parts match</h2>
-            <p className="mt-2 text-sm text-muted-foreground">Try another year or ask the yards. Requests are free.</p>
-            <Link href="/request" className="mt-4 inline-flex font-semibold text-orange-ink">Request this part</Link>
+          <div className="rounded-3xl border border-dashed border-orange bg-white p-6 sm:p-8">
+            <h2 className="font-display text-3xl font-bold uppercase text-charcoal">No parts match</h2>
+            {summary ? <p className="mt-2 font-medium text-charcoal">{summary}</p> : null}
+            <p className="mt-2 text-sm text-muted-foreground">
+              Nothing listed matches this search. Request it on WhatsApp and ALL AUTO TT will ask the yards.
+            </p>
+            <div className="mt-5">
+              <RequestPartButton search={requestSearch} prominent />
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Opens WhatsApp to {formatPhone(brand.whatsapp)} with your make, model, year, part, and keywords filled in.
+            </p>
+            <Link href={requestHref(query)} className="mt-4 inline-flex text-sm font-semibold text-orange-ink">
+              Or post a request on the site
+            </Link>
           </div>
         )}
+        {results.items.length ? (
+          <div className="mt-6 rounded-2xl border border-border bg-white p-4">
+            <p className="text-sm font-medium text-charcoal">Not seeing the right part?</p>
+            <div className="mt-3">
+              <RequestPartButton search={requestSearch} />
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              WhatsApp {formatPhone(brand.whatsapp)} with this search filled in.
+            </p>
+          </div>
+        ) : null}
         {pages > 1 ? (
           <nav className="mt-6 flex flex-wrap gap-2" aria-label="Pagination">
             {Array.from({ length: pages }, (_, index) => index + 1).map((page) => (
@@ -112,4 +146,19 @@ async function Results({
       </section>
     </>
   );
+}
+
+function searchSummary(query: PartQuery) {
+  return [query.q, query.year ? String(query.year) : "", query.make, query.model, query.category].filter(Boolean).join(" · ");
+}
+
+function requestHref(query: PartQuery) {
+  const params = new URLSearchParams();
+  if (query.make) params.set("make", query.make);
+  if (query.model) params.set("model", query.model);
+  if (query.year) params.set("year", String(query.year));
+  if (query.category) params.set("part", query.category);
+  if (query.q) params.set("notes", query.q);
+  const qs = params.toString();
+  return qs ? `/request?${qs}` : "/request";
 }

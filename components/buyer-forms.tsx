@@ -4,8 +4,9 @@ import { useActionState, useState } from "react";
 import { inquiryAction, reportAction, requestAction, reviewAction } from "@/app/actions/public";
 import { SubmitButton } from "@/components/submit-button";
 import { controlClass, Field } from "@/components/field";
-import { reportReasons } from "@/lib/config";
+import { otherMakeValue, reportReasons } from "@/lib/config";
 import { notice } from "@/lib/messages";
+import { resolveMakeChoice } from "@/lib/search";
 import type { FormState } from "@/app/actions/types";
 
 function Banner({ state }: { state: FormState }) {
@@ -76,9 +77,20 @@ export function ReportButton({ partId }: { partId: string }) {
   );
 }
 
-export function RequestForm({ makes, models }: { makes: string[]; models: { make: string; name: string }[] }) {
+export function RequestForm({
+  makes,
+  models,
+  initial,
+}: {
+  makes: string[];
+  models: { make: string; name: string }[];
+  initial?: { make?: string; model?: string; year?: string; part?: string; notes?: string };
+}) {
   const [state, action] = useActionState(requestAction, {});
-  const [make, setMake] = useState(makes[0] ?? "");
+  const starting = resolveMakeChoice(initial?.make, makes, makes[0] ?? otherMakeValue);
+  const [makeChoice, setMakeChoice] = useState(starting.choice);
+  const [customMake, setCustomMake] = useState(starting.custom);
+  const isOther = makeChoice === otherMakeValue;
   if (state.ok) {
     return <p role="status" className="rounded-2xl bg-emerald-50 p-4 text-emerald-950">{notice(state.ok)}</p>;
   }
@@ -88,23 +100,48 @@ export function RequestForm({ makes, models }: { makes: string[]; models: { make
       <Field label="Your name"><input className={controlClass} name="name" required /></Field>
       <Field label="Phone"><input className={controlClass} name="phone" required inputMode="tel" /></Field>
       <Field label="Make">
-        <select className={controlClass} name="make" value={make} onChange={(event) => setMake(event.target.value)}>
+        <select
+          className={controlClass}
+          name={isOther ? undefined : "make"}
+          value={makeChoice}
+          onChange={(event) => setMakeChoice(event.target.value)}
+        >
           {makes.map((item) => (
-            <option key={item}>{item}</option>
+            <option key={item} value={item}>{item}</option>
           ))}
+          <option value={otherMakeValue}>Other make</option>
         </select>
       </Field>
+      {isOther ? (
+        <Field label="Type the make" hint="For BMW, Mercedes, and any make that is not in the list.">
+          <input
+            className={controlClass}
+            name="make"
+            required
+            minLength={2}
+            maxLength={40}
+            value={customMake}
+            onChange={(event) => setCustomMake(event.target.value)}
+            placeholder="BMW"
+            autoComplete="off"
+          />
+        </Field>
+      ) : null}
       <Field label="Model">
-        <select className={controlClass} name="model">
-          <option value="">Any / not sure</option>
-          {models.filter((item) => item.make === make).map((item) => (
-            <option key={item.name}>{item.name}</option>
-          ))}
-        </select>
+        {isOther ? (
+          <input className={controlClass} name="model" defaultValue={initial?.model ?? ""} placeholder="Any / not sure" />
+        ) : (
+          <select className={controlClass} name="model" defaultValue={initial?.model ?? ""}>
+            <option value="">Any / not sure</option>
+            {models.filter((item) => item.make === makeChoice).map((item) => (
+              <option key={item.name}>{item.name}</option>
+            ))}
+          </select>
+        )}
       </Field>
-      <Field label="Year"><input className={controlClass} name="year" inputMode="numeric" placeholder="2014" /></Field>
-      <Field label="Part you need"><input className={controlClass} name="part" required placeholder="Air-condition compressor" /></Field>
-      <Field label="Notes"><textarea className={`${controlClass} h-24 py-2`} name="notes" /></Field>
+      <Field label="Year"><input className={controlClass} name="year" inputMode="numeric" placeholder="2014" defaultValue={initial?.year ?? ""} /></Field>
+      <Field label="Part you need"><input className={controlClass} name="part" required placeholder="Air-condition compressor" defaultValue={initial?.part ?? ""} /></Field>
+      <Field label="Notes"><textarea className={`${controlClass} h-24 py-2`} name="notes" defaultValue={initial?.notes ?? ""} /></Field>
       <SubmitButton size="lg" variant="accent" pendingLabel="Posting…">Post request</SubmitButton>
       <p className="text-xs text-muted-foreground">Requests are free. Your phone is shown to Pro and Premium dealers who stock this make.</p>
     </form>

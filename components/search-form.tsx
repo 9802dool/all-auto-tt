@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { controlClass } from "@/components/field";
-import { conditions, regions } from "@/lib/config";
+import { conditions, otherMakeValue, regions } from "@/lib/config";
 import { years } from "@/lib/format";
+import { resolveMakeChoice } from "@/lib/search";
 
 type Catalog = {
   categories: { name: string }[];
@@ -34,56 +35,113 @@ export function SearchForm({
   initial?: Initial;
   variant: "hero" | "filters";
 }) {
-  const [make, setMake] = useState(initial?.make ?? "");
-  const [model, setModel] = useState(initial?.model ?? "");
-  const models = useMemo(
-    () => catalog.models.filter((item) => !make || item.make === make),
-    [catalog.models, make],
+  const makeId = useId();
+  const customMakeId = useId();
+  const knownMakes = useMemo(() => catalog.makes.map((item) => item.name), [catalog.makes]);
+  const startingMake = useMemo(
+    () => resolveMakeChoice(initial?.make, knownMakes, ""),
+    [initial?.make, knownMakes],
   );
+  const [makeChoice, setMakeChoice] = useState(startingMake.choice);
+  const [customMake, setCustomMake] = useState(startingMake.custom);
+  const [model, setModel] = useState(initial?.model ?? "");
+  const isOther = makeChoice === otherMakeValue;
+  const models = useMemo(() => {
+    if (isOther || !makeChoice) return isOther ? [] : catalog.models;
+    return catalog.models.filter((item) => item.make === makeChoice);
+  }, [catalog.models, isOther, makeChoice]);
   const yearOptions = useMemo(() => years(), []);
+
+  function onMakeChange(value: string) {
+    setMakeChoice(value);
+    setModel("");
+    if (value !== otherMakeValue) setCustomMake("");
+  }
 
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     for (const element of event.currentTarget.elements) {
       if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
-        if (!element.value) element.disabled = true;
+        if (!element.value.trim()) element.disabled = true;
       }
     }
   }
 
   return (
     <form action="/browse" method="get" onSubmit={onSubmit} className="grid gap-3">
-      {variant === "filters" ? (
-        <label className="grid gap-1 text-sm font-medium">
-          Search
-          <input className={controlClass} name="q" defaultValue={initial?.q} placeholder="Title or engine code" />
-        </label>
-      ) : null}
+      <div className="grid gap-1 text-sm font-medium">
+        <label htmlFor={`${makeId}-keywords`}>Keywords</label>
+        <input
+          id={`${makeId}-keywords`}
+          className={controlClass}
+          name="q"
+          defaultValue={initial?.q}
+          placeholder="e.g. BMW alternator"
+          autoComplete="off"
+          enterKeyHint="search"
+        />
+        <p className="text-xs font-normal text-muted-foreground">
+          Each word matches the title, description, make, model, category, or engine code. Dropdowns are optional.
+        </p>
+      </div>
       <div className={variant === "hero" ? "grid gap-3 md:grid-cols-2 xl:grid-cols-5" : "grid gap-3 sm:grid-cols-2"}>
-        <label className="grid gap-1 text-sm font-medium">
-          Make
+        <div className="grid gap-1 text-sm font-medium">
+          <label htmlFor={makeId}>Make</label>
           <select
+            id={makeId}
             className={controlClass}
-            name="make"
-            value={make}
-            onChange={(event) => {
-              setMake(event.target.value);
-              setModel("");
-            }}
+            name={isOther ? undefined : "make"}
+            value={makeChoice}
+            onChange={(event) => onMakeChange(event.target.value)}
           >
             <option value="">Any make</option>
             {catalog.makes.map((item) => (
-              <option key={item.name}>{item.name}</option>
+              <option key={item.name} value={item.name}>
+                {item.name}
+              </option>
             ))}
+            <option value={otherMakeValue}>Other make</option>
           </select>
-        </label>
+          {isOther ? (
+            <>
+              <label htmlFor={customMakeId} className="mt-2">
+                Type the make
+              </label>
+              <input
+                id={customMakeId}
+                className={controlClass}
+                name="make"
+                value={customMake}
+                maxLength={40}
+                onChange={(event) => setCustomMake(event.target.value)}
+                placeholder="BMW, Mercedes, or any make not in the list"
+                autoComplete="off"
+              />
+            </>
+          ) : null}
+        </div>
         <label className="grid gap-1 text-sm font-medium">
           Model
-          <select className={controlClass} name="model" value={model} onChange={(event) => setModel(event.target.value)}>
-            <option value="">Any model</option>
-            {models.map((item) => (
-              <option key={`${item.make}-${item.name}`}>{item.name}</option>
-            ))}
-          </select>
+          {isOther ? (
+            <input
+              className={controlClass}
+              name="model"
+              value={model}
+              maxLength={40}
+              onChange={(event) => setModel(event.target.value)}
+              placeholder="Any model"
+              autoComplete="off"
+            />
+          ) : (
+            <select className={controlClass} name="model" value={model} onChange={(event) => setModel(event.target.value)}>
+              <option value="">Any model</option>
+              {model && !models.some((item) => item.name === model) ? <option value={model}>{model}</option> : null}
+              {models.map((item) => (
+                <option key={`${item.make}-${item.name}`} value={item.name}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          )}
         </label>
         <label className="grid gap-1 text-sm font-medium">
           Year

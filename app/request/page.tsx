@@ -9,7 +9,11 @@ export const metadata: Metadata = {
   description: "Tell ALL AUTO TT the vehicle and the part. Dealers who stock that make get the request.",
 };
 
-export default function RequestPage() {
+export default function RequestPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   return (
     <main className="mx-auto grid max-w-3xl gap-6 px-4 py-8">
       <div>
@@ -19,18 +23,37 @@ export default function RequestPage() {
         </p>
       </div>
       <Suspense fallback={<p className="rounded-3xl border border-border bg-white p-5">Loading the request form…</p>}>
-        <RequestCatalog />
+        <RequestCatalog searchParams={searchParams} />
       </Suspense>
     </main>
   );
 }
 
-async function RequestCatalog() {
+async function RequestCatalog({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const raw = await searchParams;
   await connection();
   const catalog = await getCatalog();
+  const one = (key: string) => {
+    const value = raw[key];
+    return ((Array.isArray(value) ? value[0] : value) ?? "").trim();
+  };
   return (
     <div className="rounded-3xl border border-border bg-white p-5">
-      <RequestForm makes={catalog.makes.map((make) => make.name)} models={catalog.models} />
+      <RequestForm
+        makes={catalog.makes.map((make) => make.name)}
+        models={catalog.models}
+        initial={{
+          make: one("make"),
+          model: one("model"),
+          year: one("year"),
+          part: one("part"),
+          notes: one("notes"),
+        }}
+      />
     </div>
   );
 }

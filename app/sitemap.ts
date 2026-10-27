@@ -5,7 +5,7 @@ import { siteUrl } from "@/lib/config";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const data = await cachedSitemap();
   const base = siteUrl();
-  const staticRoutes = ["", "/browse", "/dealers", "/request", "/for-dealers", "/advertise", "/new", "/safety"].map((path) => ({
+  const staticRoutes = ["", "/browse", "/dealers", "/request", "/for-dealers", "/advertise", "/new", "/safety", "/terms", "/privacy", "/refunds"].map((path) => ({
     url: `${base}${path || "/"}`,
     changeFrequency: "daily" as const,
     priority: path === "" ? 1 : 0.6,

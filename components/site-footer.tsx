@@ -4,7 +4,7 @@ import { brand } from "@/lib/config";
 export function SiteFooter() {
   return (
     <footer className="mt-auto bg-charcoal text-white">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-5">
         <div>
           <img src="/logo.svg" alt="ALL AUTO TT logo" className="h-9 w-auto brightness-0 invert" />
           <p className="mt-3 max-w-xs text-sm text-zinc-300">{brand.tagline}</p>
@@ -33,6 +33,14 @@ export function SiteFooter() {
             ALL AUTO TT does not sell parts. Dealers list stock. Buyers pay the dealer on pickup.
           </p>
           <p className="mt-3 text-sm text-zinc-400">{brand.domain}</p>
+        </div>
+        <div>
+          <h2 className="font-display text-lg tracking-wide uppercase">Legal</h2>
+          <ul className="mt-3 space-y-2 text-sm text-zinc-300">
+            <li><Link href="/terms">Terms of Use</Link></li>
+            <li><Link href="/privacy">Privacy Policy</Link></li>
+            <li><Link href="/refunds">Refund &amp; Cancellation</Link></li>
+          </ul>
         </div>
       </div>
     </footer>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { signupAction } from "@/app/actions/public";
 import { Field, controlClass } from "@/components/field";
 import { SubmitButton } from "@/components/submit-button";
@@ -64,6 +65,17 @@ export function SignupForm({ regions }: { regions: readonly string[] }) {
       <Field label="Logo" hint="Optional. Photos are resized before they are stored.">
         <input className={controlClass} name="logo" type="file" accept="image/*" />
       </Field>
+      <p className="text-sm text-muted-foreground">
+        By signing up you agree to our{" "}
+        <Link href="/terms" className="font-semibold text-orange-ink">
+          Terms of Use
+        </Link>{" "}
+        and{" "}
+        <Link href="/privacy" className="font-semibold text-orange-ink">
+          Privacy Policy
+        </Link>
+        .
+      </p>
       <SubmitButton size="lg" pendingLabel="Creating the shop…">
         Create dealer account
       </SubmitButton>

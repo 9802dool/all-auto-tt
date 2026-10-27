@@ -86,6 +86,9 @@ export const makes = [
 
 export const popularMakes = ["Toyota", "Nissan", "Honda", "Mazda", "Mitsubishi", "Suzuki", "Hyundai", "Kia"] as const;
 
+/** Sentinel for the "Other make" dropdown option. Never stored as a part's make. */
+export const otherMakeValue = "__other__";
+
 export const plans = {
   free: {
     id: "free" as const,

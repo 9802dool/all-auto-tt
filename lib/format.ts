@@ -31,6 +31,28 @@ export function partWhatsAppMessage(title: string, url: string) {
   return `Hi, I'm interested in ${title} (${url}) listed on ${brand.name}. Is it still available?`;
 }
 
+export function partSearchRequestMessage(search: {
+  make?: string;
+  model?: string;
+  year?: string | number;
+  part?: string;
+  keywords?: string;
+}) {
+  const line = (label: string, value: string | number | undefined) => {
+    const text = value === undefined || value === null ? "" : String(value).trim();
+    return `${label}: ${text || "any"}`;
+  };
+  return [
+    `Hi ${brand.name}, I can't find this part on the site. Can you help me find it?`,
+    "",
+    line("Make", search.make),
+    line("Model", search.model),
+    line("Year", search.year),
+    line("Part", search.part),
+    line("Keywords", search.keywords),
+  ].join("\n");
+}
+
 export function formatTTD(amount: number) {
   return `TT$${Math.round(amount).toLocaleString("en-TT")}`;
 }

@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { extras, featuredBoost, plans, regions } from "@/lib/config";
+import { extras, featuredBoost, otherMakeValue, plans, regions } from "@/lib/config";
 import { getCurrentUser } from "@/lib/auth";
 import { digits } from "@/lib/format";
 import { parseCsv } from "@/lib/csv";
@@ -45,7 +45,7 @@ function partInput(formData: FormData, photos: string[]): Omit<Part, "id" | "slu
   return {
     title: text(formData, "title", 140),
     category: text(formData, "category", 40),
-    make: text(formData, "make", 40),
+    make: text(formData, "make", 40).replace(/\s+/g, " "),
     model: text(formData, "model", 40),
     year_from: Number.isFinite(yearFrom) && yearFrom > 1980 ? yearFrom : null,
     year_to: Number.isFinite(yearTo) && yearTo > 1980 ? yearTo : null,
@@ -83,7 +83,10 @@ export async function savePartAction(_state: FormState, formData: FormData): Pro
   const photos = [...existing, ...uploaded].slice(0, 8);
   const input = partInput(formData, photos);
   if (input.title.length < 4) return { error: "Give the part a clear title." };
-  if (!input.category || !input.make) return { error: "Choose a category and make." };
+  if (!input.category) return { error: "Choose a category." };
+  if (input.make.length < 2 || input.make === otherMakeValue) {
+    return { error: "Choose a make, or type one that is not in the list." };
+  }
   if (!Number.isFinite(input.price_ttd) || input.price_ttd < 0) return { error: "Enter a price in TTD." };
   if (!regions.some((region) => region.name === input.location)) return { error: "Choose a location." };
   if (!photos.length) return { error: "Add at least one photo." };

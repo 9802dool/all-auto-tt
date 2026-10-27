@@ -1,5 +1,6 @@
 import { pageSize, siteUrl } from "@/lib/config";
 import { daysFromNow } from "@/lib/format";
+import { matchesKeywords, sameText } from "@/lib/search";
 import type { AdPlacement, DB, Dealer, EmailMessage, ListedPart, Part, PartQuery, SortKey } from "@/lib/types";
 import { isExpired, isFeatured, isPublicPart, isSoldHidden, planRank, toPublicDealer } from "@/lib/visibility";
 
@@ -28,8 +29,8 @@ export function queryParts(db: DB, query: PartQuery, now = Date.now()) {
     if (query.dealerId && part.dealer_id !== query.dealerId) return false;
     if (!query.includeHidden && !isPublicPart(part, dealer, now)) return false;
     if (query.status && part.status !== query.status) return false;
-    if (query.make && part.make !== query.make) return false;
-    if (query.model && part.model !== query.model) return false;
+    if (query.make && !sameText(part.make, query.make)) return false;
+    if (query.model && !sameText(part.model, query.model)) return false;
     if (query.category && part.category !== query.category) return false;
     if (query.condition && part.condition !== query.condition) return false;
     if (query.location && part.location !== query.location) return false;
@@ -40,10 +41,7 @@ export function queryParts(db: DB, query: PartQuery, now = Date.now()) {
     }
     if (query.min != null && part.price_ttd < query.min) return false;
     if (query.max != null && part.price_ttd > query.max) return false;
-    if (query.q) {
-      const hay = `${part.title} ${part.engine_code} ${part.make} ${part.model} ${part.description}`.toLowerCase();
-      if (!hay.includes(query.q.toLowerCase())) return false;
-    }
+    if (query.q && !matchesKeywords(part, query.q)) return false;
     return true;
   });
 

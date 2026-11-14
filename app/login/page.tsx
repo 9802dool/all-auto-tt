@@ -6,7 +6,6 @@ import { Field, controlClass } from "@/components/field";
 import { SubmitButton } from "@/components/submit-button";
 import { demoAccounts } from "@/lib/config";
 import { firstParam, safeNext } from "@/lib/format";
-import { isSupabaseConfigured } from "@/lib/supabase/env";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -26,7 +25,7 @@ export default function LoginPage({ searchParams }: { searchParams: Query }) {
 async function Body({ searchParams }: { searchParams: Query }) {
   const query = await searchParams;
   const next = safeNext(firstParam(query.next) || "/dealer");
-  const local = !isSupabaseConfigured();
+  const local = process.env.NODE_ENV !== "production";
   return (
     <main className="mx-auto grid max-w-lg gap-4 px-4 py-10">
       <h1 className="font-display text-5xl font-extrabold uppercase">Sign in</h1>
@@ -52,7 +51,7 @@ async function Body({ searchParams }: { searchParams: Query }) {
       </p>
       {local ? (
         <aside className="rounded-2xl border border-border bg-white p-4 text-sm">
-          <p className="font-semibold">Local demo, no Supabase keys</p>
+          <p className="font-semibold">Practice logins on this computer</p>
           <ul className="mt-2 space-y-1">
             <li>Pro dealer: akeem@centralparts.example / {demoAccounts.dealer.password}</li>
             <li>Premium dealer: lisa@southside.example / {demoAccounts.dealer.password}</li>

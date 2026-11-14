@@ -6,8 +6,6 @@ import { digits, safeNext } from "@/lib/format";
 import { otherMakeValue, regionPoint, reportReasons } from "@/lib/config";
 import { createInquiry, createReport, createRequest, createReview, getDealerForOwner, getUserByEmail, registerDealer } from "@/lib/data";
 import { mutate } from "@/lib/mutate";
-import { createSupabaseServer } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { saveUpload } from "@/lib/uploads";
 import type { FormState } from "@/app/actions/types";
 
@@ -21,13 +19,6 @@ export async function loginAction(formData: FormData) {
   const next = safeNext(text(formData, "next", 200) || "/dealer");
   if (!email || !password) redirect("/login?error=Enter%20your%20email%20and%20password.");
 
-  if (isSupabaseConfigured()) {
-    const supabase = await createSupabaseServer();
-    const { error } = await supabase!.auth.signInWithPassword({ email, password });
-    if (error) redirect(`/login?error=${encodeURIComponent(error.message)}`);
-    redirect(next);
-  }
-
   const user = await getUserByEmail(email);
   if (!user || !verifyPassword(password, user.password_hash)) {
     redirect("/login?error=Email%20or%20password%20is%20wrong.");
@@ -38,10 +29,6 @@ export async function loginAction(formData: FormData) {
 }
 
 export async function logoutAction() {
-  if (isSupabaseConfigured()) {
-    const supabase = await createSupabaseServer();
-    await supabase?.auth.signOut();
-  }
   await clearSession();
   redirect("/?ok=signedout");
 }
@@ -75,43 +62,6 @@ export async function signupAction(_state: FormState, formData: FormData): Promi
     } catch (error) {
       return { error: error instanceof Error ? error.message : "Logo upload failed." };
     }
-  }
-
-  if (isSupabaseConfigured()) {
-    const supabase = await createSupabaseServer();
-    const { data, error } = await supabase!.auth.signUp({ email, password, options: { data: { name: contact, phone } } });
-    if (error) {
-      console.error("[signup] Supabase auth.signUp error:", error);
-      return { error: error.message };
-    }
-    if (!data.user) return { error: "Check your email to confirm the account, then sign in." };
-    const result = await mutate(() =>
-      registerDealer({
-        user: { id: data.user!.id, email, password_hash: null, name: contact, phone },
-        dealer: {
-          business_name: business,
-          contact_name: contact,
-          phone,
-          whatsapp,
-          email,
-          region,
-          address,
-          lat: point.lat,
-          lng: point.lng,
-          hours: hours || "Mon–Sat 8:00am–4:00pm",
-          logo,
-          cover: null,
-          about,
-          registration_number: registration,
-        },
-      }),
-    );
-    if (!result.ok) {
-      console.error("[signup] registerDealer error:", result.error);
-      return { error: result.error };
-    }
-    if (!data.session) return { error: "Account created. Confirm the email, then sign in. The shop stays pending until approval." };
-    redirect("/dealer?ok=joined");
   }
 
   const result = await mutate(() =>

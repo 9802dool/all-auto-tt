@@ -13,7 +13,7 @@ export const dealerNav = [
 export const adminNav = [
   { href: "/admin", label: "Stats" },
   { href: "/admin/dealers", label: "Dealers" },
-  { href: "/admin/listings", label: "Listings" },
+  { href: "/admin/listings", label: "Parts" },
   { href: "/admin/payments", label: "Payments" },
   { href: "/admin/catalog", label: "Catalog" },
   { href: "/admin/reports", label: "Reports" },

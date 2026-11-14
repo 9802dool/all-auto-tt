@@ -1,6 +1,6 @@
 import "server-only";
 
-import { brand, featuredBoost, plans, siteUrl } from "@/lib/config";
+import { brand, featuredBoost, ownerEmail, plans, siteUrl } from "@/lib/config";
 import { daysFromNow, slugify } from "@/lib/format";
 import { ActionError, commit, loadDb } from "@/lib/repo";
 import {
@@ -226,16 +226,18 @@ export async function registerDealer(input: {
     }
     
     const slug = uniqueSlug(db.dealers.map((dealer) => dealer.slug), slugify(input.dealer.business_name));
+    const role = input.user.email.toLowerCase() === ownerEmail() ? ("admin" as const) : ("dealer" as const);
     let user;
     
     if (existingUser) {
       user = existingUser;
       user.name = input.user.name;
       user.phone = input.user.phone;
+      user.role = role;
     } else {
       user = {
         ...input.user,
-        role: "dealer" as const,
+        role,
         created_at: new Date().toISOString(),
       };
       db.users.push(user);

@@ -10,7 +10,7 @@ function blurb(detail: string, place: string, tested: boolean) {
   const check = tested
     ? "It was tested in the yard before listing."
     : "Sold as seen — inspect it on the bench before you pay.";
-  return `${detail} Foreign-used part in ${place}. ${check} Cash on pickup at the shop. Sample listing for the ALL AUTO TT demo.`;
+  return `SAMPLE LISTING. ${detail} In ${place}. ${check} Cash on pickup at the shop. This is an example, not a real part for sale.`;
 }
 
 function part(
@@ -24,7 +24,7 @@ function part(
     year_to: null,
     engine_code: "",
     transmission_type: "Automatic",
-    condition: "Used – Tested",
+    condition: "Foreign-used",
     negotiable: false,
     status: "available",
     featured: false,
@@ -47,6 +47,7 @@ function part(
 export function createSeed(): DB {
   const stamp = new Date().toISOString();
   const users = [
+    { id: "u_admin", email: "admin@allautott.example", password_hash: DEALER_HASH, name: "Simeon", phone: "18683224691", role: "admin" as const, created_at: stamp },
     { id: "u_central", email: "akeem@centralparts.example", password_hash: DEALER_HASH, name: "Akeem Ramdass", phone: "18685550101", role: "dealer" as const, created_at: stamp },
     { id: "u_south", email: "lisa@southside.example", password_hash: DEALER_HASH, name: "Lisa Mohammed", phone: "18685550102", role: "dealer" as const, created_at: stamp },
     { id: "u_east", email: "ron@eastyard.example", password_hash: DEALER_HASH, name: "Ron Charles", phone: "18685550103", role: "dealer" as const, created_at: stamp },
@@ -57,7 +58,7 @@ export function createSeed(): DB {
     {
       id: "d_central",
       owner_user_id: "u_central",
-      business_name: "Central Foreign Used Parts",
+      business_name: "Central Foreign Used Parts (Sample)",
       slug: "central-foreign-used-parts",
       contact_name: "Akeem Ramdass",
       phone: "18685550101",
@@ -70,7 +71,7 @@ export function createSeed(): DB {
       hours: "Mon–Fri 8:00am–5:00pm, Sat 8:00am–2:00pm",
       logo: "/dealers/logo-central.svg",
       cover: "/dealers/garage.jpg",
-      about: "Foreign-used engines and gearboxes, mostly Toyota and Honda, pulled and shelved in Chaguanas. Come down, hear it run where we can, and pay when you collect.",
+      about: "Sample yard — not a real shop. Example Toyota and Honda parts in Chaguanas so buyers can see how a storefront looks. WhatsApp and call buttons use a sample number.",
       registration_number: "BN-2014-88321",
       status: "approved",
       verified: true,
@@ -85,7 +86,7 @@ export function createSeed(): DB {
     {
       id: "d_south",
       owner_user_id: "u_south",
-      business_name: "South Side Breakers",
+      business_name: "South Side Breakers (Sample)",
       slug: "south-side-breakers",
       contact_name: "Lisa Mohammed",
       phone: "18685550102",
@@ -98,7 +99,7 @@ export function createSeed(): DB {
       hours: "Mon–Sat 8:00am–4:30pm",
       logo: "/dealers/logo-south.svg",
       cover: "/dealers/yard.jpg",
-      about: "Breakers yard on Cipero Street. Nissan, Hyundai and Kia shells plus mechanical parts. Premium shop with room to inspect before you hand over cash.",
+      about: "Sample yard — not a real shop. Example Nissan parts in San Fernando, including Tiida, B15 and AD Wagon. Come through the page the way a buyer would, then message the shop.",
       registration_number: "BN-2018-12044",
       status: "approved",
       verified: true,
@@ -113,7 +114,7 @@ export function createSeed(): DB {
     {
       id: "d_east",
       owner_user_id: "u_east",
-      business_name: "East Yard Spares",
+      business_name: "East Yard Spares (Sample)",
       slug: "east-yard-spares",
       contact_name: "Ron Charles",
       phone: "18685550103",
@@ -126,7 +127,7 @@ export function createSeed(): DB {
       hours: "Mon–Fri 8:30am–4:30pm, Sat 9:00am–1:00pm",
       logo: "/dealers/logo-east.svg",
       cover: "/parts/workshop.jpg",
-      about: "Small Arima yard for everyday Japanese spares. Free plan, so buyers can still WhatsApp, but the verified badge is not on this shop yet.",
+      about: "Sample yard — not a real shop. Example Honda, Hyundai, Kia and Suzuki Swift parts in Arima. The free plan is on this shop so the listing limit is visible.",
       registration_number: "",
       status: "approved",
       verified: false,
@@ -141,7 +142,7 @@ export function createSeed(): DB {
     {
       id: "d_crown",
       owner_user_id: "u_crown",
-      business_name: "Crown Point Auto Parts",
+      business_name: "Crown Point Auto Parts (Sample)",
       slug: "crown-point-auto-parts",
       contact_name: "Maya George",
       phone: "18685550104",
@@ -154,7 +155,7 @@ export function createSeed(): DB {
       hours: "Tue–Sat 9:00am–4:00pm",
       logo: "/dealers/logo-crown.svg",
       cover: "/dealers/night.jpg",
-      about: "Tobago shop waiting on approval. Listings stay hidden from buyers until the platform admin approves the account.",
+      about: "Sample yard — not a real shop. This Tobago account is waiting for approval, so buyers cannot see it until an admin approves it.",
       registration_number: "",
       status: "pending",
       verified: false,
@@ -168,153 +169,115 @@ export function createSeed(): DB {
     },
   ];
 
-  const parts: Part[] = [
-    part({
-      id: "p01", title: "2014 Toyota Axio Gearbox", dealer_id: "d_central", category: "Gearbox/Transmission", make: "Toyota", model: "Axio",
-      year_from: 2012, year_to: 2014, engine_code: "1NZ-FE", price_ttd: 4200, location: "Chaguanas", featured: true, featured_until: daysFromNow(6, now()),
-      photos: ["/parts/tools.jpg", "/parts/workshop.jpg"], views: 146, whatsapp_clicks: 18, call_clicks: 4, created_at: daysFromNow(-8, now()),
-      description: blurb("Automatic gearbox pulled from a 2014 Axio. Shifts through the ranges on the bench.", "Chaguanas", true),
-    }),
-    part({
-      id: "p02", title: "Toyota 1NZ-FE Engine", dealer_id: "d_central", category: "Engine", make: "Toyota", model: "Axio",
-      year_from: 2008, year_to: 2014, engine_code: "1NZ-FE", price_ttd: 7800, location: "Chaguanas", featured: true, featured_until: daysFromNow(6, now()),
-      photos: ["/parts/engine.jpg", "/parts/engine-2.jpg"], views: 210, whatsapp_clicks: 24, call_clicks: 6, inquiry_count: 1, created_at: daysFromNow(-7, now()),
-      description: blurb("1NZ-FE long motor for Axio and Fielder. Compression checked and it turns freely.", "Chaguanas", true),
-    }),
-    part({
-      id: "p03", title: "2013 Toyota Fielder Headlights", dealer_id: "d_central", category: "Lights", make: "Toyota", model: "Fielder",
-      year_from: 2012, year_to: 2015, price_ttd: 900, negotiable: true, location: "Chaguanas",
-      photos: ["/parts/front.jpg", "/parts/classic.jpg"], views: 64, whatsapp_clicks: 5, created_at: daysFromNow(-6, now()),
-      description: blurb("Pair of Fielder headlights, clear lenses, both plugs intact.", "Chaguanas", true),
-    }),
-    part({
-      id: "p04", title: "Toyota Premio Front Bumper", dealer_id: "d_central", category: "Body Parts", make: "Toyota", model: "Premio",
-      year_from: 2012, year_to: 2016, price_ttd: 1400, location: "Chaguanas", condition: "Used – Untested",
-      photos: ["/parts/silver.jpg", "/parts/front.jpg"], views: 51, whatsapp_clicks: 3, created_at: daysFromNow(-11, now()),
-      description: blurb("Premio front bumper, mounting points straight. Colour is silver, unpainted clips included.", "Chaguanas", false),
-    }),
-    part({
-      id: "p05", title: "Nissan Note E12 Radiator", dealer_id: "d_central", category: "Electrical", make: "Nissan", model: "Note",
-      year_from: 2012, year_to: 2016, engine_code: "HR12", price_ttd: 650, location: "Chaguanas",
-      photos: ["/parts/detail.jpg", "/parts/tools.jpg"], views: 33, created_at: daysFromNow(-15, now()),
-      description: blurb("Note E12 radiator, tanks solid, no patchwork.", "Chaguanas", true),
-    }),
-    part({
-      id: "p06", title: "Honda Fit GE6 Gearbox", dealer_id: "d_central", category: "Gearbox/Transmission", make: "Honda", model: "Fit",
-      year_from: 2010, year_to: 2013, price_ttd: 3100, location: "Chaguanas", transmission_type: "Automatic",
-      photos: ["/parts/workshop.jpg", "/parts/tools.jpg"], views: 88, whatsapp_clicks: 9, created_at: daysFromNow(-9, now()),
-      description: blurb("GE6 Fit automatic gearbox. Engages drive and reverse on the bench.", "Chaguanas", true),
-    }),
-    part({
-      id: "p07", title: "Mazda Demio DJ Bonnet", dealer_id: "d_central", category: "Body Parts", make: "Mazda", model: "Demio",
-      year_from: 2014, year_to: 2018, price_ttd: 1100, negotiable: true, location: "Chaguanas",
-      photos: ["/parts/coupe.jpg", "/parts/silver.jpg"], views: 29, created_at: daysFromNow(-4, now()),
-      description: blurb("Demio DJ bonnet, no rust on the underside. Hinges not included.", "Chaguanas", false),
-    }),
-    part({
-      id: "p08", title: "Suzuki Swift Sport Seats", dealer_id: "d_central", category: "Interior", make: "Suzuki", model: "Swift",
-      year_from: 2012, year_to: 2016, price_ttd: 800, location: "Chaguanas", condition: "Refurbished",
-      photos: ["/parts/classic.jpg", "/parts/coupe.jpg"], views: 41, whatsapp_clicks: 4, created_at: daysFromNow(-3, now()),
-      description: blurb("Front seat pair from a Swift Sport. Frames solid, covers cleaned.", "Chaguanas", true),
-    }),
-    part({
-      id: "p09", title: "2016 Nissan Note HR12 Engine", dealer_id: "d_south", category: "Engine", make: "Nissan", model: "Note",
-      year_from: 2014, year_to: 2017, engine_code: "HR12", price_ttd: 6500, location: "San Fernando", featured: true, featured_until: daysFromNow(5, now()),
-      photos: ["/parts/engine-2.jpg", "/parts/engine.jpg"], views: 174, whatsapp_clicks: 21, call_clicks: 5, created_at: daysFromNow(-5, now()),
-      description: blurb("HR12 engine from a 2016 Note. Turns by hand and has been compression tested.", "San Fernando", true),
-    }),
-    part({
-      id: "p10", title: "Nissan AD Wagon Y12 Gearbox", dealer_id: "d_south", category: "Gearbox/Transmission", make: "Nissan", model: "AD Wagon",
-      year_from: 2008, year_to: 2014, price_ttd: 2800, location: "San Fernando", featured: true, featured_until: daysFromNow(5, now()),
-      photos: ["/parts/tools.jpg", "/parts/detail.jpg"], views: 97, whatsapp_clicks: 11, created_at: daysFromNow(-13, now()),
-      description: blurb("Y12 AD Wagon automatic gearbox, common fitment for the Wingroad too. Confirm the code when you message.", "San Fernando", true),
-    }),
-    part({
-      id: "p11", title: "Mitsubishi Lancer CY Headlamp", dealer_id: "d_south", category: "Lights", make: "Mitsubishi", model: "Lancer",
-      year_from: 2008, year_to: 2014, price_ttd: 700, negotiable: true, location: "San Fernando",
-      photos: ["/parts/front.jpg", "/parts/hero.jpg"], views: 38, created_at: daysFromNow(-18, now()),
-      description: blurb("Driver-side Lancer CY headlamp. Lens has light haze, housing is intact.", "San Fernando", false),
-    }),
-    part({
-      id: "p12", title: "Hyundai Tucson TL Bonnet", dealer_id: "d_south", category: "Body Parts", make: "Hyundai", model: "Tucson",
-      year_from: 2016, year_to: 2020, price_ttd: 1800, location: "San Fernando",
-      photos: ["/parts/suv.jpg", "/parts/silver.jpg"], views: 72, whatsapp_clicks: 6, created_at: daysFromNow(-2, now()),
-      description: blurb("Tucson TL bonnet, white, no filler. Latch included.", "San Fernando", true),
-    }),
-    part({
-      id: "p13", title: "Kia Sportage QL Tail Light", dealer_id: "d_south", category: "Lights", make: "Kia", model: "Sportage",
-      year_from: 2016, year_to: 2021, price_ttd: 650, location: "San Fernando",
-      photos: ["/parts/suv.jpg", "/parts/detail.jpg"], views: 22, created_at: daysFromNow(-1, now()),
-      description: blurb("Passenger tail light for a Sportage QL. All bulbs present.", "San Fernando", true),
-    }),
-    part({
-      id: "p14", title: "Toyota Allion Lower Arms", dealer_id: "d_south", category: "Suspension", make: "Toyota", model: "Allion",
-      year_from: 2008, year_to: 2016, price_ttd: 480, negotiable: true, location: "San Fernando", condition: "Used – Untested",
-      photos: ["/parts/detail.jpg", "/parts/tools.jpg"], views: 19, created_at: daysFromNow(-16, now()),
-      description: blurb("Pair of front lower arms for Allion and Premio. Bushes are the originals.", "San Fernando", false),
-    }),
-    part({
-      id: "p15", title: "Toyota Vitz NCP131 Rear Bumper", dealer_id: "d_south", category: "Body Parts", make: "Toyota", model: "Vitz",
-      year_from: 2011, year_to: 2016, price_ttd: 850, location: "San Fernando", status: "reserved",
-      photos: ["/parts/coupe.jpg", "/parts/classic.jpg"], views: 44, whatsapp_clicks: 7, created_at: daysFromNow(-2, now()),
-      description: blurb("Vitz NCP131 rear bumper. A buyer has asked us to hold it until Saturday.", "San Fernando", true),
-    }),
-    part({
-      id: "p16", title: "Honda Civic FD Driver Door", dealer_id: "d_east", category: "Body Parts", make: "Honda", model: "Civic",
-      year_from: 2006, year_to: 2011, price_ttd: 1600, location: "Arima", status: "sold", sold_at: daysFromNow(-10, now()),
-      photos: ["/parts/classic.jpg", "/parts/silver.jpg"], views: 80, whatsapp_clicks: 8, created_at: daysFromNow(-20, now()),
-      description: blurb("Civic FD driver door, glass and mirror included. Sold more than a week ago, so search hides it.", "Arima", true),
-    }),
-    part({
-      id: "p17", title: "Nissan Tiida C11 Alternator", dealer_id: "d_east", category: "Electrical", make: "Nissan", model: "Tiida",
-      year_from: 2006, year_to: 2012, price_ttd: 550, location: "Arima",
-      photos: ["/parts/engine.jpg", "/parts/tools.jpg"], views: 27, whatsapp_clicks: 2, created_at: daysFromNow(-9, now()),
-      description: blurb("Tiida C11 alternator. Bench-tested and charging.", "Arima", true),
-    }),
-    part({
-      id: "p18", title: "Mazda Axela BL Fender", dealer_id: "d_east", category: "Body Parts", make: "Mazda", model: "Axela",
-      year_from: 2009, year_to: 2013, price_ttd: 750, negotiable: true, location: "Arima",
-      photos: ["/parts/front.jpg", "/parts/coupe.jpg"], views: 15, created_at: daysFromNow(-6, now()),
-      description: blurb("Driver fender from an Axela BL. Small parking scuff on the edge.", "Arima", false),
-    }),
-    part({
-      id: "p19", title: "Hyundai Elantra MD Gearbox", dealer_id: "d_east", category: "Gearbox/Transmission", make: "Hyundai", model: "Elantra",
-      year_from: 2011, year_to: 2015, price_ttd: 3600, location: "Arima", transmission_type: "Automatic",
-      photos: ["/parts/workshop.jpg", "/parts/detail.jpg"], views: 36, whatsapp_clicks: 3, created_at: daysFromNow(-12, now()),
-      description: blurb("Elantra MD automatic gearbox. Pulled from a running car.", "Arima", true),
-    }),
-    part({
-      id: "p20", title: "Toyota Aqua Front Seats", dealer_id: "d_east", category: "Interior", make: "Toyota", model: "Aqua",
-      year_from: 2012, year_to: 2017, price_ttd: 900, location: "Arima",
-      photos: ["/parts/classic.jpg", "/parts/hero.jpg"], views: 24, created_at: daysFromNow(-4, now()),
-      description: blurb("Aqua front seats, cloth, rails included. No tears in the cushions.", "Arima", true),
-    }),
-    part({
-      id: "p21", title: "Suzuki Alto HA36 Engine", dealer_id: "d_east", category: "Engine", make: "Suzuki", model: "Alto",
-      year_from: 2015, year_to: 2020, engine_code: "R06A", price_ttd: 4800, location: "Arima",
-      expires_at: daysFromNow(5, now()),
-      photos: ["/parts/engine.jpg", "/parts/workshop.jpg"], views: 58, whatsapp_clicks: 4, created_at: daysFromNow(-55, now()),
-      description: blurb("Alto HA36 R06A engine. This listing is close to the 60-day expiry so the dealer can try Still available.", "Arima", true),
-    }),
-    part({
-      id: "p22", title: "Kia Rio UB Headlamp", dealer_id: "d_east", category: "Lights", make: "Kia", model: "Rio",
-      year_from: 2012, year_to: 2016, price_ttd: 500, location: "Arima", status: "sold", sold_at: daysFromNow(-2, now()),
-      photos: ["/parts/front.jpg", "/parts/detail.jpg"], views: 31, whatsapp_clicks: 2, created_at: daysFromNow(-14, now()),
-      description: blurb("Rio UB driver headlamp. Marked sold two days ago, so it still shows with a sold badge.", "Arima", true),
-    }),
-    part({
-      id: "p23", title: "Mitsubishi ASX Front Grille", dealer_id: "d_crown", category: "Body Parts", make: "Mitsubishi", model: "ASX",
-      year_from: 2011, year_to: 2016, price_ttd: 600, location: "Tobago",
-      photos: ["/parts/suv.jpg", "/parts/front.jpg"], views: 4, created_at: daysFromNow(-1, now()),
-      description: blurb("ASX grille with chrome strip. Hidden until Crown Point Auto Parts is approved.", "Tobago", false),
-    }),
-    part({
-      id: "p24", title: "Honda Stream RN6 Rear Bumper", dealer_id: "d_crown", category: "Body Parts", make: "Honda", model: "Stream",
-      year_from: 2006, year_to: 2012, price_ttd: 1200, location: "Tobago",
-      photos: ["/parts/silver.jpg", "/parts/classic.jpg"], views: 2, created_at: daysFromNow(-1, now()),
-      description: blurb("Stream RN6 rear bumper. Waiting on dealer approval before buyers can see it.", "Tobago", false),
-    }),
+  const photo = {
+    engine: ["/parts/engine.jpg", "/parts/engine-2.jpg"],
+    bench: ["/parts/tools.jpg", "/parts/workshop.jpg"],
+    front: ["/parts/front.jpg", "/parts/classic.jpg"],
+    body: ["/parts/silver.jpg", "/parts/front.jpg"],
+    light: ["/parts/detail.jpg", "/parts/front.jpg"],
+    suv: ["/parts/suv.jpg", "/parts/silver.jpg"],
+    seat: ["/parts/classic.jpg", "/parts/coupe.jpg"],
+    wheel: ["/parts/wheel.jpg", "/parts/tire.jpg"],
+    shop: ["/parts/workshop.jpg", "/parts/detail.jpg"],
+    detail: ["/parts/detail.jpg", "/parts/tools.jpg"],
+  } as const;
+
+  const sampleRows: Array<{
+    id: string;
+    title: string;
+    dealer_id: string;
+    category: string;
+    make: string;
+    model: string;
+    year_from: number;
+    year_to: number;
+    price_ttd: number;
+    location: string;
+    shot: keyof typeof photo;
+    note: string;
+    engine_code?: string;
+    condition?: string;
+    transmission_type?: string;
+    negotiable?: boolean;
+    status?: Part["status"];
+    soldDaysAgo?: number;
+    featured?: boolean;
+    expiresIn?: number;
+    createdDaysAgo?: number;
+    tested?: boolean;
+  }> = [
+    { id: "p01", title: "2014 Toyota Corolla Gearbox", dealer_id: "d_central", category: "Gearbox/Transmission", make: "Toyota", model: "Corolla", year_from: 2012, year_to: 2016, engine_code: "1NZ-FE", price_ttd: 4500, location: "Chaguanas", shot: "bench", transmission_type: "Automatic", featured: true, createdDaysAgo: 8, tested: true, note: "Automatic gearbox pulled from a 2014 Corolla. Shifts through the ranges on the bench." },
+    { id: "p02", title: "Toyota Yaris 1NZ-FE Engine", dealer_id: "d_central", category: "Engine", make: "Toyota", model: "Yaris", year_from: 2008, year_to: 2016, engine_code: "1NZ-FE", price_ttd: 7800, location: "Chaguanas", shot: "engine", featured: true, createdDaysAgo: 7, tested: true, note: "1NZ-FE long motor for Yaris and Corolla. Compression checked and it turns freely." },
+    { id: "p03", title: "Toyota Hilux 2KD Engine", dealer_id: "d_central", category: "Engine", make: "Toyota", model: "Hilux", year_from: 2006, year_to: 2015, engine_code: "2KD-FTV", price_ttd: 14500, location: "Chaguanas", shot: "engine", createdDaysAgo: 5, tested: true, note: "2KD-FTV diesel from a Hilux. Turns by hand. Injectors are still on the motor." },
+    { id: "p04", title: "Toyota Hilux Tail Lights", dealer_id: "d_central", category: "Lights", make: "Toyota", model: "Hilux", year_from: 2012, year_to: 2015, price_ttd: 900, location: "Chaguanas", shot: "suv", transmission_type: "Unknown", createdDaysAgo: 4, tested: true, note: "Pair of Hilux tail lights. Lenses intact, plugs not cut." },
+    { id: "p05", title: "2016 Toyota Axio Front Bumper", dealer_id: "d_central", category: "Body Parts", make: "Toyota", model: "Axio", year_from: 2012, year_to: 2016, price_ttd: 1600, location: "Chaguanas", shot: "body", transmission_type: "Unknown", createdDaysAgo: 11, tested: false, note: "Axio front bumper, mounting points straight. Colour is silver." },
+    { id: "p06", title: "Toyota Corolla Front Shocks", dealer_id: "d_central", category: "Suspension", make: "Toyota", model: "Corolla", year_from: 2008, year_to: 2014, price_ttd: 700, location: "Chaguanas", shot: "shop", condition: "Used", transmission_type: "Unknown", negotiable: true, createdDaysAgo: 9, tested: false, note: "Pair of front shocks from a local Corolla. Bushes are the originals." },
+    { id: "p07", title: "Toyota Yaris Headlights", dealer_id: "d_central", category: "Lights", make: "Toyota", model: "Yaris", year_from: 2011, year_to: 2016, price_ttd: 850, location: "Chaguanas", shot: "front", transmission_type: "Unknown", createdDaysAgo: 6, tested: true, note: "Pair of Yaris headlights, clear lenses, both plugs intact." },
+    { id: "p08", title: "Honda Fit GE6 Gearbox", dealer_id: "d_central", category: "Gearbox/Transmission", make: "Honda", model: "Fit", year_from: 2010, year_to: 2013, price_ttd: 3200, location: "Chaguanas", shot: "bench", transmission_type: "Automatic", createdDaysAgo: 9, tested: true, note: "GE6 Fit automatic gearbox. Engages drive and reverse on the bench." },
+    { id: "p40", title: "Toyota Corolla Steel Wheel", dealer_id: "d_central", category: "Wheels & Tyres", make: "Toyota", model: "Corolla", year_from: 2008, year_to: 2014, price_ttd: 250, location: "Chaguanas", shot: "wheel", transmission_type: "Unknown", createdDaysAgo: 3, tested: true, note: "15-inch steel wheel with a usable tyre. No bend in the rim." },
+    { id: "p41", title: "Toyota Hilux Front Bumper", dealer_id: "d_central", category: "Body Parts", make: "Toyota", model: "Hilux", year_from: 2006, year_to: 2011, price_ttd: 1800, location: "Chaguanas", shot: "suv", condition: "Used", transmission_type: "Unknown", createdDaysAgo: 12, tested: false, note: "Hilux front bumper, locally used. Brackets are still on it." },
+    { id: "p42", title: "Toyota Corolla Alternator", dealer_id: "d_central", category: "Electrical", make: "Toyota", model: "Corolla", year_from: 2008, year_to: 2014, engine_code: "1NZ-FE", price_ttd: 550, location: "Chaguanas", shot: "shop", transmission_type: "Unknown", createdDaysAgo: 10, tested: true, note: "Corolla alternator for the 1NZ. Bench-tested and charging." },
+    { id: "p43", title: "Toyota Hilux Air Filter", dealer_id: "d_central", category: "Other", make: "Toyota", model: "Hilux", year_from: 2006, year_to: 2015, engine_code: "2KD-FTV", price_ttd: 180, location: "Chaguanas", shot: "detail", condition: "New", transmission_type: "Unknown", createdDaysAgo: 1, tested: true, note: "New air filter still in the box for a 2KD Hilux." },
+    { id: "p15", title: "Toyota Yaris Rear Bumper", dealer_id: "d_central", category: "Body Parts", make: "Toyota", model: "Yaris", year_from: 2011, year_to: 2016, price_ttd: 850, location: "Chaguanas", shot: "body", transmission_type: "Unknown", status: "reserved", createdDaysAgo: 2, tested: true, note: "Yaris rear bumper. A buyer asked us to hold it until Saturday." },
+    { id: "p44", title: "Honda Fit L15A Engine", dealer_id: "d_central", category: "Engine", make: "Honda", model: "Fit", year_from: 2008, year_to: 2013, engine_code: "L15A", price_ttd: 6800, location: "Chaguanas", shot: "engine", createdDaysAgo: 6, tested: true, note: "L15A engine from a Fit. Compression checked. Gearbox is not included." },
+    { id: "p09", title: "Nissan Tiida HR15 Engine", dealer_id: "d_south", category: "Engine", make: "Nissan", model: "Tiida", year_from: 2006, year_to: 2012, engine_code: "HR15DE", price_ttd: 6500, location: "San Fernando", shot: "engine", featured: true, createdDaysAgo: 5, tested: true, note: "HR15DE engine from a Tiida. Turns by hand and has been compression tested." },
+    { id: "p10", title: "Nissan AD Wagon Gearbox", dealer_id: "d_south", category: "Gearbox/Transmission", make: "Nissan", model: "AD Wagon", year_from: 2008, year_to: 2014, engine_code: "HR15DE", price_ttd: 2800, location: "San Fernando", shot: "bench", transmission_type: "Automatic", featured: true, createdDaysAgo: 13, tested: true, note: "AD Wagon automatic gearbox. Common fitment for the Wingroad too. Confirm the code when you message." },
+    { id: "p11", title: "Nissan B15 Headlamp", dealer_id: "d_south", category: "Lights", make: "Nissan", model: "B15", year_from: 2000, year_to: 2005, price_ttd: 450, location: "San Fernando", shot: "light", condition: "Used", transmission_type: "Unknown", negotiable: true, createdDaysAgo: 18, tested: false, note: "Driver-side B15 headlamp. Lens has light haze. This is the B15, not the Tiida." },
+    { id: "p12", title: "Nissan B15 Gearbox", dealer_id: "d_south", category: "Gearbox/Transmission", make: "Nissan", model: "B15", year_from: 2000, year_to: 2005, engine_code: "QG18DE", price_ttd: 2600, location: "San Fernando", shot: "bench", transmission_type: "Automatic", createdDaysAgo: 4, tested: true, note: "B15 automatic gearbox for the QG18. Engages on the bench." },
+    { id: "p13", title: "Nissan Tiida Front Bumper", dealer_id: "d_south", category: "Body Parts", make: "Nissan", model: "Tiida", year_from: 2006, year_to: 2012, price_ttd: 1100, location: "San Fernando", shot: "front", transmission_type: "Unknown", createdDaysAgo: 3, tested: true, note: "Tiida C11 front bumper. Clips included, unpainted." },
+    { id: "p14", title: "Nissan AD Wagon Radiator", dealer_id: "d_south", category: "Electrical", make: "Nissan", model: "AD Wagon", year_from: 2008, year_to: 2014, engine_code: "HR15DE", price_ttd: 600, location: "San Fernando", shot: "shop", transmission_type: "Unknown", createdDaysAgo: 7, tested: true, note: "AD Wagon radiator. Tanks are solid, no patchwork." },
+    { id: "p17", title: "Nissan Tiida Front Seats", dealer_id: "d_south", category: "Interior", make: "Nissan", model: "Tiida", year_from: 2006, year_to: 2012, price_ttd: 800, location: "San Fernando", shot: "seat", transmission_type: "Unknown", createdDaysAgo: 6, tested: true, note: "Tiida front seats, cloth, rails included. No tears in the cushions." },
+    { id: "p18", title: "Nissan B15 Starter", dealer_id: "d_south", category: "Electrical", make: "Nissan", model: "B15", year_from: 2000, year_to: 2005, engine_code: "QG18DE", price_ttd: 400, location: "San Fernando", shot: "shop", transmission_type: "Unknown", createdDaysAgo: 8, tested: true, note: "B15 starter motor. Bench-tested and it kicks." },
+    { id: "p19", title: "Nissan AD Wagon Tail Light", dealer_id: "d_south", category: "Lights", make: "Nissan", model: "AD Wagon", year_from: 2008, year_to: 2014, price_ttd: 350, location: "San Fernando", shot: "light", transmission_type: "Unknown", negotiable: true, createdDaysAgo: 2, tested: true, note: "Passenger tail light for an AD Wagon. All bulbs present." },
+    { id: "p20", title: "Nissan Tiida Steering Rack", dealer_id: "d_south", category: "Suspension", make: "Nissan", model: "Tiida", year_from: 2006, year_to: 2012, price_ttd: 900, location: "San Fernando", shot: "shop", condition: "Used", transmission_type: "Unknown", createdDaysAgo: 15, tested: false, note: "Tiida steering rack, sold as seen. No play we could feel, but inspect it before you pay." },
+    { id: "p45", title: "Nissan B15 Lower Arms", dealer_id: "d_south", category: "Suspension", make: "Nissan", model: "B15", year_from: 2000, year_to: 2005, price_ttd: 480, location: "San Fernando", shot: "detail", transmission_type: "Unknown", negotiable: true, createdDaysAgo: 11, tested: false, note: "Pair of front lower arms for a B15. Bushes are the originals." },
+    { id: "p46", title: "Nissan Tiida ECU", dealer_id: "d_south", category: "Electrical", make: "Nissan", model: "Tiida", year_from: 2006, year_to: 2012, engine_code: "HR15DE", price_ttd: 850, location: "San Fernando", shot: "detail", transmission_type: "Unknown", createdDaysAgo: 1, tested: true, note: "Tiida HR15 computer. Bring your immobiliser details when you message." },
+    { id: "p51", title: "Nissan B15 Radiator", dealer_id: "d_south", category: "Electrical", make: "Nissan", model: "B15", year_from: 2000, year_to: 2005, engine_code: "QG18DE", price_ttd: 450, location: "San Fernando", shot: "shop", transmission_type: "Unknown", createdDaysAgo: 9, tested: true, note: "B15 radiator for the QG18. No patches on the tanks." },
+    { id: "p16", title: "Honda Civic FD Driver Door", dealer_id: "d_east", category: "Body Parts", make: "Honda", model: "Civic", year_from: 2006, year_to: 2011, price_ttd: 1600, location: "Arima", shot: "body", condition: "Used", transmission_type: "Unknown", status: "sold", soldDaysAgo: 10, createdDaysAgo: 20, tested: true, note: "Civic FD driver door, glass and mirror included. Sold more than a week ago, so search hides it." },
+    { id: "p21", title: "Suzuki Swift K12B Engine", dealer_id: "d_east", category: "Engine", make: "Suzuki", model: "Swift", year_from: 2011, year_to: 2017, engine_code: "K12B", price_ttd: 5200, location: "Arima", shot: "engine", expiresIn: 5, createdDaysAgo: 55, tested: true, note: "Swift K12B engine. This listing is close to the 60-day mark so the dealer can press Still available." },
+    { id: "p22", title: "Kia Rio Headlamp", dealer_id: "d_east", category: "Lights", make: "Kia", model: "Rio", year_from: 2012, year_to: 2016, price_ttd: 500, location: "Arima", shot: "light", transmission_type: "Unknown", status: "sold", soldDaysAgo: 2, createdDaysAgo: 14, tested: true, note: "Rio driver headlamp. Marked sold two days ago, so it still shows with a sold badge." },
+    { id: "p23", title: "Hyundai Elantra Gearbox", dealer_id: "d_east", category: "Gearbox/Transmission", make: "Hyundai", model: "Elantra", year_from: 2011, year_to: 2015, engine_code: "G4FC", price_ttd: 3600, location: "Arima", shot: "bench", transmission_type: "Automatic", createdDaysAgo: 12, tested: true, note: "Elantra automatic gearbox for the G4FC. Pulled from a running car." },
+    { id: "p24", title: "Honda Civic Front Seats", dealer_id: "d_east", category: "Interior", make: "Honda", model: "Civic", year_from: 2006, year_to: 2011, price_ttd: 750, location: "Arima", shot: "seat", transmission_type: "Unknown", createdDaysAgo: 4, tested: true, note: "Civic FD front seats, cloth. Rails included." },
+    { id: "p25", title: "Hyundai Tucson Bonnet", dealer_id: "d_east", category: "Body Parts", make: "Hyundai", model: "Tucson", year_from: 2016, year_to: 2020, price_ttd: 1800, location: "Arima", shot: "suv", transmission_type: "Unknown", createdDaysAgo: 2, tested: true, note: "Tucson bonnet, white, no filler. Latch included." },
+    { id: "p26", title: "Kia Sportage Tail Light", dealer_id: "d_east", category: "Lights", make: "Kia", model: "Sportage", year_from: 2016, year_to: 2021, price_ttd: 650, location: "Arima", shot: "suv", transmission_type: "Unknown", createdDaysAgo: 1, tested: true, note: "Passenger tail light for a Sportage. All bulbs present." },
+    { id: "p27", title: "Suzuki Swift Gearbox", dealer_id: "d_east", category: "Gearbox/Transmission", make: "Suzuki", model: "Swift", year_from: 2011, year_to: 2017, engine_code: "K12B", price_ttd: 2400, location: "Arima", shot: "bench", transmission_type: "Automatic", createdDaysAgo: 8, tested: true, note: "Swift automatic gearbox. Engages drive and reverse on the bench." },
+    { id: "p28", title: "Hyundai Elantra Headlamp", dealer_id: "d_east", category: "Lights", make: "Hyundai", model: "Elantra", year_from: 2011, year_to: 2015, price_ttd: 700, location: "Arima", shot: "front", transmission_type: "Unknown", negotiable: true, createdDaysAgo: 6, tested: true, note: "Elantra driver headlamp. Lens is clear." },
+    { id: "p29", title: "Kia Rio Radiator", dealer_id: "d_east", category: "Electrical", make: "Kia", model: "Rio", year_from: 2012, year_to: 2016, engine_code: "G4FA", price_ttd: 550, location: "Arima", shot: "shop", transmission_type: "Unknown", createdDaysAgo: 7, tested: true, note: "Rio radiator. Tanks are solid." },
+    { id: "p30", title: "Suzuki Swift Front Bumper", dealer_id: "d_east", category: "Body Parts", make: "Suzuki", model: "Swift", year_from: 2011, year_to: 2017, price_ttd: 900, location: "Arima", shot: "front", condition: "Used", transmission_type: "Unknown", createdDaysAgo: 10, tested: false, note: "Swift front bumper, locally used. A scuff on the corner." },
+    { id: "p31", title: "Honda Civic Lower Arm", dealer_id: "d_central", category: "Suspension", make: "Honda", model: "Civic", year_from: 2006, year_to: 2011, price_ttd: 420, location: "Chaguanas", shot: "detail", transmission_type: "Unknown", createdDaysAgo: 5, tested: true, note: "Civic FD front lower arm. Ball joint is still tight." },
+    { id: "p32", title: "Suzuki Swift Brake Pads", dealer_id: "d_central", category: "Other", make: "Suzuki", model: "Swift", year_from: 2011, year_to: 2017, price_ttd: 280, location: "Chaguanas", shot: "detail", condition: "New", transmission_type: "Unknown", createdDaysAgo: 1, tested: true, note: "New front brake pads for a Swift, still sealed." },
+    { id: "p33", title: "Hyundai Tucson Headlamp", dealer_id: "d_central", category: "Lights", make: "Hyundai", model: "Tucson", year_from: 2016, year_to: 2020, price_ttd: 800, location: "Chaguanas", shot: "suv", transmission_type: "Unknown", createdDaysAgo: 3, tested: true, note: "Tucson driver headlamp. Housing is intact." },
+    { id: "p47", title: "Honda Fit Front Seats", dealer_id: "d_central", category: "Interior", make: "Honda", model: "Fit", year_from: 2008, year_to: 2013, price_ttd: 700, location: "Chaguanas", shot: "seat", transmission_type: "Unknown", createdDaysAgo: 4, tested: true, note: "Fit front seats, cloth. No tears." },
+    { id: "p48", title: "Honda Civic Rear Bumper", dealer_id: "d_crown", category: "Body Parts", make: "Honda", model: "Civic", year_from: 2006, year_to: 2011, price_ttd: 1400, location: "Tobago", shot: "body", transmission_type: "Unknown", createdDaysAgo: 1, tested: false, note: "Civic rear bumper. Hidden until this sample yard is approved." },
+    { id: "p49", title: "Suzuki Swift Driver Door", dealer_id: "d_crown", category: "Body Parts", make: "Suzuki", model: "Swift", year_from: 2011, year_to: 2017, price_ttd: 1100, location: "Tobago", shot: "front", condition: "Used", transmission_type: "Unknown", createdDaysAgo: 1, tested: false, note: "Swift driver door. Waiting on approval before buyers can see it." },
+    { id: "p50", title: "Toyota Hilux Door Glass", dealer_id: "d_crown", category: "Body Parts", make: "Toyota", model: "Hilux", year_from: 2006, year_to: 2015, price_ttd: 400, location: "Tobago", shot: "detail", transmission_type: "Unknown", createdDaysAgo: 2, tested: true, note: "Hilux door glass. Hidden while the yard is pending." },
   ];
+
+  const parts: Part[] = sampleRows.map((row) =>
+    part({
+      id: row.id,
+      title: row.title,
+      dealer_id: row.dealer_id,
+      category: row.category,
+      make: row.make,
+      model: row.model,
+      year_from: row.year_from,
+      year_to: row.year_to,
+      engine_code: row.engine_code ?? "",
+      price_ttd: row.price_ttd,
+      location: row.location,
+      photos: [...photo[row.shot]],
+      description: blurb(row.note, row.location, row.tested ?? true),
+      created_at: daysFromNow(-(row.createdDaysAgo ?? 8), now()),
+      ...(row.condition ? { condition: row.condition } : {}),
+      transmission_type: row.transmission_type ?? (row.category === "Gearbox/Transmission" ? "Automatic" : "Unknown"),
+      ...(row.negotiable ? { negotiable: true } : {}),
+      ...(row.status ? { status: row.status } : {}),
+      ...(row.soldDaysAgo ? { sold_at: daysFromNow(-row.soldDaysAgo, now()) } : {}),
+      ...(row.featured ? { featured: true, featured_until: daysFromNow(6, now()) } : {}),
+      ...(row.expiresIn ? { expires_at: daysFromNow(row.expiresIn, now()) } : {}),
+    }),
+  );
 
   const reviews: Review[] = [
     { id: "r1", dealer_id: "d_central", name: "Ravi S.", phone: "18685550111", rating: 5, comment: "Engine started on the first turn. Price was what they listed.", created_at: daysFromNow(-20, now()) },
@@ -406,7 +369,7 @@ export function createSeed(): DB {
         id: "rep1",
         part_id: "p11",
         reason: "Wrong vehicle",
-        details: "Buyer thinks this lamp is for the CS3, not the CY. Sample report.",
+        details: "Buyer thinks this lamp is for the Tiida, not the B15. Sample report.",
         status: "open",
         created_at: daysFromNow(-1, now()),
       },

@@ -45,7 +45,7 @@ export function csvTemplate() {
     "2014",
     "1NZ-FE",
     "Automatic",
-    "Used – Tested",
+    "Foreign-used",
     "4200",
     "no",
     "Automatic gearbox, tested on the bench.",
@@ -74,8 +74,14 @@ export function parseCsv(text: string): { rows: CsvPart[]; errors: string[] } {
     if (!title) errors.push(`Line ${line}: title is required.`);
     if (!categories.some((item) => item.name === category)) errors.push(`Line ${line}: category must match the site list.`);
     if (!Number.isFinite(price) || price < 0) errors.push(`Line ${line}: price_ttd must be a number.`);
-    const condition = cell("condition") || "Used – Untested";
-    if (!conditions.includes(condition as (typeof conditions)[number])) errors.push(`Line ${line}: condition is not recognised.`);
+    const legacyCondition: Record<string, (typeof conditions)[number]> = {
+      "Used – Tested": "Foreign-used",
+      "Used – Untested": "Used",
+      Refurbished: "Used",
+    };
+    const rawCondition = cell("condition");
+    const condition = legacyCondition[rawCondition] ?? (rawCondition || "Foreign-used");
+    if (!conditions.includes(condition as (typeof conditions)[number])) errors.push(`Line ${line}: condition must be Foreign-used, Used or New.`);
     const location = cell("location");
     if (location && !regions.some((region) => region.name === location)) errors.push(`Line ${line}: location is not a known region.`);
     const status = cell("status") || "available";

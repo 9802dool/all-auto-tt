@@ -6,6 +6,7 @@ import { AdSlot } from "@/components/ad-slot";
 import { InquiryForm, ReportButton } from "@/components/buyer-forms";
 import { ContactActions } from "@/components/contact-actions";
 import { Gallery } from "@/components/gallery";
+import { SampleBadge } from "@/components/sample-badge";
 import { PartCard } from "@/components/part-card";
 import { ViewBeacon } from "@/components/view-beacon";
 import { cachedPart, cachedSitemap } from "@/lib/catalog";
@@ -14,7 +15,7 @@ import { excerpt, fitment, formatPhone, formatTTD, partMetaTitle } from "@/lib/f
 
 export async function generateStaticParams() {
   const entries = await cachedSitemap();
-  if (!entries.parts.length) return [{ slug: "2014-toyota-axio-gearbox" }];
+  if (!entries.parts.length) return [{ slug: "2014-toyota-corolla-gearbox" }];
   return entries.parts.map((slug) => ({ slug }));
 }
 
@@ -92,7 +93,12 @@ async function PartBody({ params }: { params: Promise<{ slug: string }> }) {
       <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
         <Gallery photos={part.photos} title={part.title} />
         <div>
-          {part.example ? <p className="text-xs font-bold tracking-wide text-orange-ink uppercase">Sample listing</p> : null}
+          {part.example ? (
+            <p className="mb-2 flex flex-wrap items-center gap-2 text-sm">
+              <SampleBadge />
+              Example only. This part is not really for sale.
+            </p>
+          ) : null}
           <h1 className="font-display text-4xl leading-none font-extrabold tracking-tight uppercase sm:text-5xl">{part.title}</h1>
           <p className="mt-3 text-lg">{fitment(part)}</p>
           <p className="mt-2 font-display text-5xl font-bold">{formatTTD(part.price_ttd)}</p>
@@ -124,15 +130,18 @@ async function PartBody({ params }: { params: Promise<{ slug: string }> }) {
           <div className="flex items-center gap-3">
             {part.dealer.logo ? <img src={part.dealer.logo} alt={`${part.dealer.business_name} logo`} className="size-14 rounded-xl" /> : null}
             <div>
-              <h2 className="text-lg font-semibold">{part.dealer.business_name}</h2>
+              <h2 className="text-lg font-semibold">
+                <Link href={`/dealers/${part.dealer.slug}`} className="hover:text-orange-ink">{part.dealer.business_name}</Link>
+              </h2>
               <p className="text-sm text-muted-foreground">{part.dealer.region}</p>
+              {part.example || part.dealer.example ? <SampleBadge /> : null}
               {part.dealer.verified ? <p className="text-xs font-bold tracking-wide text-orange-ink uppercase">Verified dealer</p> : null}
             </div>
           </div>
           <p className="mt-3 text-sm">{part.dealer.rating_count ? `${part.dealer.rating_avg} / 5 from ${part.dealer.rating_count} reviews` : "No reviews yet"}</p>
           <p className="mt-2 text-sm">{part.dealer.address}</p>
           <p className="text-sm">{formatPhone(part.dealer.phone)}</p>
-          <Link href={`/dealers/${part.dealer.slug}`} className="mt-3 inline-flex text-sm font-semibold text-orange-ink">View storefront</Link>
+          <Link href={`/dealers/${part.dealer.slug}`} className="mt-3 inline-flex min-h-11 items-center text-base font-semibold text-orange-ink">See this dealer&apos;s parts</Link>
           <div className="mt-5">
             <h3 className="font-semibold">Inquiry form</h3>
             <div className="mt-3">

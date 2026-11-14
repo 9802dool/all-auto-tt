@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { PartImage } from "@/components/part-image";
+import { SampleBadge } from "@/components/sample-badge";
 import { fitment, formatTTD } from "@/lib/format";
 import type { ListedPart } from "@/lib/types";
 
 const conditionClass: Record<string, string> = {
+  "Foreign-used": "bg-emerald-700 text-white",
+  Used: "bg-amber-300 text-zinc-950",
+  New: "bg-sky-800 text-white",
   "Used – Tested": "bg-emerald-700 text-white",
   "Used – Untested": "bg-amber-300 text-zinc-950",
   Refurbished: "bg-sky-800 text-white",
@@ -31,6 +35,11 @@ export function PartCard({ part, priority = false }: { part: ListedPart; priorit
               {part.status}
             </span>
           ) : null}
+          {part.example || part.dealer.example ? (
+            <span className="absolute bottom-3 right-3">
+              <SampleBadge />
+            </span>
+          ) : null}
         </div>
         <div className="space-y-1 p-4">
           <h3 className="font-display text-2xl leading-none font-bold tracking-tight text-charcoal uppercase">{part.title}</h3>
@@ -39,10 +48,14 @@ export function PartCard({ part, priority = false }: { part: ListedPart; priorit
           <p className="text-sm">
             {part.negotiable ? "Nearest offer · " : ""}
             {part.location}
-            <span className="text-muted-foreground"> · {part.dealer.business_name}</span>
           </p>
         </div>
       </Link>
+      <div className="px-4 pb-4">
+        <Link href={`/dealers/${part.dealer.slug}`} className="inline-flex min-h-11 items-center text-sm font-semibold text-orange-ink">
+          {part.dealer.business_name}
+        </Link>
+      </div>
     </article>
   );
 }

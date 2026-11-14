@@ -13,7 +13,7 @@ npm run dev
 
 Open [http://127.0.0.1:43123](http://127.0.0.1:43123).
 
-With Supabase variables left empty, the first page load writes `data/db.json` (gitignored) with 4 sample dealers and 24 sample parts. Photos in `public/parts` and `public/dealers` are sample imagery. Uploaded photos go to `public/uploads`.
+With Supabase variables left empty, the first page load writes `data/db.json` (gitignored) with 4 sample dealers and 44 sample parts. Photos in `public/parts` and `public/dealers` are sample imagery. Uploaded photos in the local demo stay in the browser session until Supabase is configured.
 
 ### Demo logins
 
@@ -25,6 +25,7 @@ Shown on the sign-in page while Supabase is unset.
 | Premium dealer, San Fernando | lisa@southside.example | demo-dealer |
 | Free dealer, Arima | ron@eastyard.example | demo-dealer |
 | Pending dealer, Tobago | maya@crownpoint.example | demo-dealer |
+| Admin (site owner) | admin@allautott.example | demo-dealer |
 
 ## What to click
 
@@ -33,45 +34,49 @@ Shown on the sign-in page while Supabase is unset.
 - `/request` posts a part request. Paid dealers who stock that make see the phone number. Free dealers see a blurred preview.
 - `/for-dealers` is the page to send to yards: benefits, TT$ prices, FAQ, sign-up.
 - Dealer dashboard: add a part (camera photos are compressed), CSV at `/dealer/parts/import`, mark reserved or sold, Still available?, feature for TT$50, upload a bank receipt.
-- Admin: approve Crown Point, mark East Yard's pending transfer paid, moderate a report, schedule an ad or Dealer of the Month, copy the daily digest.
+- Admin: sign in as the admin, approve Crown Point, mark East Yard's pending transfer paid, remove a bad listing, schedule an ad or Dealer of the Month, copy the daily digest.
 - Share kit: square and story images, storefront QR, PDF flyer, and `/api/flyers/mechanics`.
 - `/new`, `/feed.xml`, `/feed.json`, `/toyota/gearboxes`, `/sitemap.xml`.
 
-## Environment
+## Set this up on Vercel
 
-Copy `.env.example` to `.env.local`.
+The live site already points at Supabase. Dealer sign-up, photos, and listings only stick when these three are set together. They are already on the Vercel project. If you create a new project, add them again.
 
-| Variable | Purpose |
-| --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | Project URL. Leave empty for the local demo. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Browser and cookie auth key. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only. Never expose it to the browser. |
-| `NEXT_PUBLIC_SITE_URL` | Links in WhatsApp messages, feeds and the sitemap. |
-| `SESSION_SECRET` | Signs the local session cookie. Required in production. |
-| `NEXT_PUBLIC_GA_ID` | GA4 id, `G-…`. Omitted script if empty. |
-| `NEXT_PUBLIC_FB_PIXEL_ID` | Facebook pixel id. Omitted if empty. |
-| `RESEND_API_KEY` | Sends the outbox. Without it, mail is marked logged. |
-| `EMAIL_FROM` | From address for Resend. |
-| `CRON_SECRET` | Bearer token for `GET /api/cron/maintenance`. |
-| `ADMIN_EMAIL` | Receives new-dealer notices. |
+| Variable | Where to find it | Required |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API → Project URL | Yes, for real accounts |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Same page. Use the publishable key or the legacy anon key. | Yes, for real accounts |
+| `SUPABASE_SERVICE_ROLE_KEY` | Same page. Secret key or legacy service_role key. Server only. Never put this in the browser or in git. | Yes, for real accounts |
+| `NEXT_PUBLIC_SITE_URL` | The public address, for example `https://all-auto-tt-bice.vercel.app` | Yes |
+| `SESSION_SECRET` | Any long random string. Used when Supabase is not configured. | Yes in production |
+| `ADMIN_EMAIL` | The email you sign up with. That account becomes the admin. Defaults to `allautott@gmail.com` if this is empty. | Recommended |
+| `CRON_SECRET` | Long random string. Protects the daily maintenance job. | Recommended |
+| `RESEND_API_KEY` | Optional. Without it, emails stay in the admin outbox. | No |
+| `EMAIL_FROM` | From address for Resend. | No |
+| `NEXT_PUBLIC_GA_ID` | GA4 id, `G-…`. The script is left out when this is empty. | No |
+| `NEXT_PUBLIC_FB_PIXEL_ID` | Facebook pixel. Left out when empty. | No |
 
-All three Supabase variables must be set together. The app then uses Auth, Postgres and the `media` storage bucket. The service role bypasses row-level security; the app still checks that a dealer only edits their own shop. SQL policies are the backstop for direct client access.
+Leave all three Supabase values empty to use the local sample yard on your computer.
 
-## Supabase
+### First-time Supabase setup
 
-1. Create a project.
-2. Paste `supabase/schema.sql` into the SQL editor and run it. That file creates the tables, row-level security, the `media` bucket, the admin check, and the category catalog.
-3. In Authentication, turn off email confirmation if you want sign-up to land straight in the dashboard.
-4. Put the URL, anon key and service role key in `.env.local`.
-5. After that person signs up, promote them:
+1. Create a Supabase project.
+2. Open the SQL editor, paste `supabase/schema.sql`, and run it. That creates the tables, the photo bucket named `media`, and the rules that keep dealers out of each other's stock.
+3. In Authentication → Providers → Email, you can leave email confirmation on. Sign-up still creates the shop. The person confirms, then signs in.
+4. Add the three Supabase values, `NEXT_PUBLIC_SITE_URL`, `SESSION_SECRET`, and `ADMIN_EMAIL` in Vercel. Redeploy.
+5. Open the site once. If there are no real dealers yet, the app saves the sample yards (marked Sample) so search is not empty.
+6. Sign up at `/dealer/signup` with `ADMIN_EMAIL` (or `allautott@gmail.com` if you did not set it). That account can open `/admin`.
+7. Approve or reject shops at `/admin/dealers`. Remove a bad part at `/admin/listings`.
+
+If that email already has an account, open the site after deploy. The app promotes it to admin. You can also run this in the SQL editor:
 
 ```sql
 select public.grant_admin('you@example.com');
 ```
 
-Dealers can update their own row and listings. Triggers stop them changing plan, verification, featured flags and lead counters. Admins can edit every table. Storage bucket `media` is public-read.
+Sample dealer logins such as `akeem@centralparts.example` work only on the local demo. They are not real Supabase users. Buyers keep seeing the sample parts, marked Sample, after a real dealer joins. Delete one from Admin → Parts if you do not want it on the site. Once a real dealer exists, the app does not add more samples.
 
-The local JSON file is the demo. Production on Vercel should use Supabase. Without Supabase, Vercel keeps demo data in `/tmp`, which resets whenever a function instance is recycled.
+Dealers can update their own shop and listings. They cannot change their own approval, plan, or featured flags. Photos go in the public `media` bucket. The site does not take payment for parts.
 
 ## Vercel
 

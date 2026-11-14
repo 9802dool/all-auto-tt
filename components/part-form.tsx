@@ -184,7 +184,7 @@ export function PartForm({
       </Field>
       <fieldset className="grid gap-2">
         <legend className="text-sm font-medium">Photos</legend>
-        <p className="text-xs text-muted-foreground">Up to 8. Phone photos are compressed in the browser, then resized again on the server.</p>
+        <p className="text-xs text-muted-foreground">Up to 8 photos. Use your camera or pick photos already on your phone.</p>
         <div className="flex flex-wrap gap-2">
           {kept.map((photo) => (
             <figure key={photo} className="relative">
@@ -209,15 +209,14 @@ export function PartForm({
           type="file"
           accept="image/*"
           multiple
-          capture="environment"
           onChange={(event) => void onPhotos(event.target.files)}
         />
         <button
           type="button"
-          className="h-11 rounded-xl border border-dashed border-orange px-4 text-sm font-semibold"
+          className="h-14 rounded-xl border border-dashed border-orange px-4 text-base font-semibold"
           onClick={() => fileRef.current?.click()}
         >
-          Add photos from camera or gallery
+          Take a photo or choose from your phone
         </button>
       </fieldset>
       <SubmitButton size="lg" pendingLabel="Saving the part…">

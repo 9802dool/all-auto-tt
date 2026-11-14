@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AdSlot } from "@/components/ad-slot";
+import { SampleBadge } from "@/components/sample-badge";
 import { CategoryIcon } from "@/components/category-icon";
 import { PartCard } from "@/components/part-card";
 import { SearchForm } from "@/components/search-form";
@@ -33,7 +34,7 @@ export default async function HomePage() {
             <SearchForm catalog={catalog} variant="hero" />
           </div>
           <p className="mt-4 text-sm text-zinc-200">
-            {home.partCount} parts from {home.dealerCount} dealers in the sample yard. You are not buying from ALL AUTO TT.
+            {home.partCount} parts from {home.dealerCount} dealers. Sample yards are marked Sample. You are not buying from ALL AUTO TT.
           </p>
         </div>
       </section>
@@ -127,7 +128,10 @@ export default async function HomePage() {
                   <p className="text-sm text-muted-foreground">{dealer.region}</p>
                 </div>
               </div>
-              {dealer.verified ? <p className="mt-3 text-xs font-bold tracking-wide text-orange-ink uppercase">Verified dealer</p> : null}
+              <div className="mt-3 flex flex-wrap gap-2">
+                {dealer.example ? <SampleBadge /> : null}
+                {dealer.verified ? <p className="text-xs font-bold tracking-wide text-orange-ink uppercase">Verified dealer</p> : null}
+              </div>
             </Link>
           ))}
         </div>

@@ -79,9 +79,9 @@ async function PartsBody({ searchParams }: { searchParams: Query }) {
                     <Mini action={renewAction} id={part.id} label="Still available?" />
                   ) : null}
                   {part.status === "available" ? <Mini action={statusAction} id={part.id} status="reserved" label="Reserve" /> : null}
-                  {part.status !== "sold" ? <Mini action={statusAction} id={part.id} status="sold" label="Mark sold" /> : null}
+                  {part.status !== "sold" ? <Mini action={statusAction} id={part.id} status="sold" label="Mark sold" size="lg" /> : null}
                   {part.status === "sold" || part.status === "reserved" ? (
-                    <Mini action={statusAction} id={part.id} status="available" label="Mark available" />
+                    <Mini action={statusAction} id={part.id} status="available" label="Mark available" size="lg" />
                   ) : null}
                   <form action={featureCheckoutAction}>
                     <input type="hidden" name="part_id" value={part.id} />
@@ -104,17 +104,19 @@ function Mini({
   id,
   label,
   status,
+  size = "sm",
 }: {
   action: (formData: FormData) => Promise<void>;
   id: string;
   label: string;
   status?: string;
+  size?: "sm" | "lg";
 }) {
   return (
     <form action={action}>
       <input type="hidden" name="id" value={id} />
       {status ? <input type="hidden" name="status" value={status} /> : null}
-      <SubmitButton variant="outline" size="sm">
+      <SubmitButton variant="outline" size={size}>
         {label}
       </SubmitButton>
     </form>

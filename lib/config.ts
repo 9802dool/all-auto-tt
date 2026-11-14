@@ -13,7 +13,11 @@ export const demoAccounts = {
   dealer: { password: "demo-dealer" },
 } as const;
 
-export const conditions = ["Used – Tested", "Used – Untested", "Refurbished"] as const;
+export const conditions = ["Foreign-used", "Used", "New"] as const;
+
+export function ownerEmail() {
+  return (process.env.ADMIN_EMAIL || brand.email).trim().toLowerCase();
+}
 
 export const transmissions = ["Automatic", "Manual", "CVT", "Tiptronic", "Unknown"] as const;
 
@@ -52,11 +56,11 @@ export const categories = [
 export const makes = [
   {
     name: "Toyota",
-    models: ["Allion", "Aqua", "Axio", "Corolla", "Fielder", "Hiace", "Hilux", "Isis", "Noah", "Premio", "RAV4", "Vitz", "Wish"],
+    models: ["Allion", "Aqua", "Axio", "Corolla", "Fielder", "Hiace", "Hilux", "Isis", "Noah", "Premio", "RAV4", "Vitz", "Wish", "Yaris"],
   },
   {
     name: "Nissan",
-    models: ["AD Wagon", "Cube", "Lafesta", "March", "Note", "Serena", "Sylphy", "Tiida", "Wingroad", "X-Trail"],
+    models: ["AD Wagon", "B15", "Cube", "Lafesta", "March", "Note", "Serena", "Sylphy", "Tiida", "Wingroad", "X-Trail"],
   },
   {
     name: "Honda",

@@ -23,6 +23,7 @@ async function Body() {
   return (
     <>
       <h1 className="font-display text-4xl font-extrabold uppercase">Add a part</h1>
+      <p className="text-sm text-muted-foreground">Title, car, price, and a photo. Most people finish this in under a minute.</p>
       <div className="rounded-3xl border border-border bg-white p-4">
         <PartForm
           catalog={{

@@ -1,7 +1,7 @@
 -- Catalog rows for a fresh Supabase project.
--- The 4 sample dealers and 24 sample parts are created by the app the first time it
--- runs without Supabase keys (see lib/seed.ts). Demo logins are local-only because
--- they are not Supabase Auth users.
+-- Sample dealers and parts are inserted by the app the first time it loads an empty
+-- Supabase project (see lib/repo.ts). Demo logins are local-only because they are
+-- not Supabase Auth users. Yaris and B15 are in the app catalog as well.
 
 insert into public.categories (id, name, slug, seo_name, icon, sort) values
   ('cat_engine', 'Engine', 'engines', 'Engines', 'Cog', 1),
@@ -31,9 +31,11 @@ insert into public.models (id, make, name) values
   ('mdl_toyota_fielder', 'Toyota', 'Fielder'),
   ('mdl_toyota_premio', 'Toyota', 'Premio'),
   ('mdl_toyota_vitz', 'Toyota', 'Vitz'),
+  ('mdl_toyota_yaris', 'Toyota', 'Yaris'),
   ('mdl_nissan_note', 'Nissan', 'Note'),
   ('mdl_nissan_tiida', 'Nissan', 'Tiida'),
   ('mdl_nissan_ad', 'Nissan', 'AD Wagon'),
+  ('mdl_nissan_b15', 'Nissan', 'B15'),
   ('mdl_honda_fit', 'Honda', 'Fit'),
   ('mdl_honda_civic', 'Honda', 'Civic'),
   ('mdl_honda_stream', 'Honda', 'Stream'),

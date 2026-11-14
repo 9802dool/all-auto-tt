@@ -3,6 +3,7 @@ import "server-only";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { mkdir, readFile, writeFile } from "fs/promises";
 import path from "path";
+import { ownerEmail } from "@/lib/config";
 import { createSeed } from "@/lib/seed";
 import type { DB, User } from "@/lib/types";
 
@@ -151,9 +152,7 @@ async function loadLocal(): Promise<DB> {
   }
 }
 
-async function loadSupabase(): Promise<DB> {
-  const client = adminClient();
-  const seed = createSeed();
+async function readSupabase(client: SupabaseClient, seed: DB): Promise<DB> {
   const db = {} as DB;
   for (const key of writeOrder) {
     const { data, error } = await client.from(tableMap[key]).select("*");
@@ -170,6 +169,68 @@ async function loadSupabase(): Promise<DB> {
     } else {
       (db[key] as unknown[]) = rows;
     }
+  }
+  return db;
+}
+
+function seedRows(seed: DB, key: TableKey) {
+  return (seed[key] as unknown as Record<string, unknown>[]).map((row) => toRow(key, row));
+}
+
+async function upsertRows(client: SupabaseClient, key: TableKey, rows: Record<string, unknown>[]) {
+  if (!rows.length) return;
+  const { error } = await client.from(tableMap[key]).upsert(rows);
+  if (error) throw new Error(`Supabase seed ${tableMap[key]}: ${error.message}`);
+}
+
+async function promoteConfiguredAdmin(client: SupabaseClient, db: DB) {
+  const email = ownerEmail();
+  if (!email) return;
+  const user = db.users.find((item) => item.email.toLowerCase() === email);
+  if (!user || user.role === "admin") return;
+  const { error } = await client.from("profiles").update({ role: "admin" }).eq("id", user.id);
+  if (error) throw new Error(`Supabase admin promote: ${error.message}`);
+  user.role = "admin";
+}
+
+async function ensureSampleRows(client: SupabaseClient, db: DB, seed: DB) {
+  let changed = false;
+  if (db.categories.length === 0) {
+    await upsertRows(client, "categories", seedRows(seed, "categories"));
+    changed = true;
+  }
+  if (db.makes.length === 0) {
+    await upsertRows(client, "makes", seedRows(seed, "makes"));
+    changed = true;
+  }
+  const knownMakes = new Set((db.makes.length ? db.makes : seed.makes).map((make) => make.name));
+  const have = new Set(db.models.map((model) => `${model.make}\0${model.name}`));
+  const missingModels = seed.models.filter((model) => knownMakes.has(model.make) && !have.has(`${model.make}\0${model.name}`));
+  if (missingModels.length) {
+    await upsertRows(client, "models", missingModels as unknown as Record<string, unknown>[]);
+    changed = true;
+  }
+
+  const realDealer = db.dealers.some((dealer) => !dealer.example);
+  const exampleParts = db.parts.filter((part) => part.example).length;
+  if (!realDealer && exampleParts < 30) {
+    const tables: TableKey[] = ["dealers", "parts", "payments", "reviews", "reports", "leads", "inquiries", "requests", "ads", "spotlights"];
+    for (const key of tables) await upsertRows(client, key, seedRows(seed, key));
+    changed = true;
+  }
+  return changed;
+}
+
+async function loadSupabase(): Promise<DB> {
+  const client = adminClient();
+  const seed = createSeed();
+  let db = await readSupabase(client, seed);
+  try {
+    await promoteConfiguredAdmin(client, db);
+    const changed = await ensureSampleRows(client, db, seed);
+    if (changed) db = await readSupabase(client, seed);
+  } catch (error) {
+    console.error("[all-auto-tt] sample yards were not saved:", error instanceof Error ? error.message : error);
   }
   return db;
 }

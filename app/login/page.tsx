@@ -58,6 +58,7 @@ async function Body({ searchParams }: { searchParams: Query }) {
             <li>Premium dealer: lisa@southside.example / {demoAccounts.dealer.password}</li>
             <li>Free dealer: ron@eastyard.example / {demoAccounts.dealer.password}</li>
             <li>Pending dealer: maya@crownpoint.example / {demoAccounts.dealer.password}</li>
+            <li>Admin: admin@allautott.example / {demoAccounts.dealer.password}</li>
           </ul>
         </aside>
       ) : null}

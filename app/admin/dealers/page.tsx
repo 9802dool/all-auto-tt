@@ -26,6 +26,7 @@ async function Body({ searchParams }: { searchParams: Query }) {
   return (
     <>
       <h1 className="font-display text-4xl font-extrabold uppercase">Dealers</h1>
+      <p className="text-sm text-muted-foreground">New shops stay hidden until you approve them. Reject hides the shop from buyers.</p>
       <Flash ok={firstParam(query.ok)} error={firstParam(query.error)} />
       <ul className="grid gap-3">
         {data.dealers.map((dealer) => (
@@ -39,6 +40,20 @@ async function Body({ searchParams }: { searchParams: Query }) {
               {dealer.example ? " · sample" : ""}
             </p>
             <p className="text-sm">Plan ends {formatDate(dealer.plan_expires_at)}</p>
+            {dealer.status === "pending" ? (
+              <div className="mt-3 flex flex-wrap gap-2">
+                <form action={dealerStatusAction}>
+                  <input type="hidden" name="id" value={dealer.id} />
+                  <input type="hidden" name="status" value="approved" />
+                  <SubmitButton size="lg">Approve</SubmitButton>
+                </form>
+                <form action={dealerStatusAction}>
+                  <input type="hidden" name="id" value={dealer.id} />
+                  <input type="hidden" name="status" value="removed" />
+                  <SubmitButton size="lg" variant="outline">Reject</SubmitButton>
+                </form>
+              </div>
+            ) : null}
             <div className="mt-3 grid gap-3 lg:grid-cols-2">
               <form action={dealerStatusAction} className="grid gap-2">
                 <input type="hidden" name="id" value={dealer.id} />

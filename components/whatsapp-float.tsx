@@ -6,6 +6,7 @@ import { waLink } from "@/lib/format";
 
 export function WhatsAppFloat() {
   const pathname = usePathname();
+  if (pathname.startsWith("/dealers/") || pathname.startsWith("/dealer")) return null;
   const lifted = pathname.startsWith("/parts/");
   const href = waLink(brand.whatsapp, "Hi ALL AUTO TT, I need help finding a part.");
   return (

@@ -25,7 +25,8 @@ async function Body({ searchParams }: { searchParams: Query }) {
   const [data, query] = await Promise.all([listEverything(), searchParams]);
   return (
     <>
-      <h1 className="font-display text-4xl font-extrabold uppercase">Listings</h1>
+      <h1 className="font-display text-4xl font-extrabold uppercase">Parts</h1>
+      <p className="text-sm text-muted-foreground">Remove a part if it should not be on the site. Buyers will stop seeing it.</p>
       <Flash ok={firstParam(query.ok)} error={firstParam(query.error)} />
       <ul className="grid gap-2">
         {data.parts.map((part) => (
@@ -36,11 +37,16 @@ async function Body({ searchParams }: { searchParams: Query }) {
             </div>
             <p className="text-muted-foreground">{part.dealer.business_name} · {formatTTD(part.price_ttd)} · {part.location}</p>
             <div className="mt-2 flex flex-wrap gap-2">
-              {(["available", "reserved", "sold", "removed"] as const).map((status) => (
+              {([
+                ["available", "Available"],
+                ["reserved", "Reserved"],
+                ["sold", "Sold"],
+                ["removed", "Remove"],
+              ] as const).map(([status, label]) => (
                 <form key={status} action={listingStatusAction}>
                   <input type="hidden" name="id" value={part.id} />
                   <input type="hidden" name="status" value={status} />
-                  <SubmitButton size="sm" variant={part.status === status ? "default" : "outline"}>{status}</SubmitButton>
+                  <SubmitButton size="lg" variant={part.status === status ? "default" : "outline"}>{label}</SubmitButton>
                 </form>
               ))}
               <form action={featureAdminAction}>

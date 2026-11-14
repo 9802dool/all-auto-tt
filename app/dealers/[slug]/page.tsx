@@ -5,6 +5,7 @@ import NotFound from "@/app/not-found";
 import { Suspense } from "react";
 import { ReviewForm } from "@/components/buyer-forms";
 import { PartCard } from "@/components/part-card";
+import { SampleBadge } from "@/components/sample-badge";
 import { getCurrentUser } from "@/lib/auth";
 import { cachedDealer, cachedSitemap } from "@/lib/catalog";
 import { listDealerParts } from "@/lib/data";
@@ -70,8 +71,14 @@ async function DealerBody({
       </div>
       <div className="mx-auto max-w-6xl px-4">
         <div className="-mt-10 rounded-3xl border border-border bg-white p-5">
+          {record.dealer.example ? (
+            <p className="mb-3 flex flex-wrap items-center gap-2 rounded-xl bg-amber-100 px-3 py-2 text-sm">
+              <SampleBadge />
+              Sample yard. These parts are examples so you can see how a shop looks. This is not a real dealer.
+            </p>
+          ) : null}
           {record.dealer.status !== "approved" ? (
-            <p className="mb-3 rounded-xl bg-amber-100 px-3 py-2 text-sm">Preview only. Buyers cannot see this shop until it is approved.</p>
+            <p className="mb-3 rounded-xl bg-amber-100 px-3 py-2 text-sm">Buyers cannot see this shop until ALL AUTO TT approves it.</p>
           ) : null}
           <div className="flex flex-wrap items-center gap-4">
             {dealer.logo ? <img src={dealer.logo} alt={`${dealer.business_name} logo`} className="size-16 rounded-2xl" /> : null}
@@ -84,10 +91,10 @@ async function DealerBody({
           </div>
           <p className="mt-4 max-w-3xl text-sm leading-6">{dealer.about}</p>
           <p className="mt-2 text-sm">{dealer.address}</p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <a className="inline-flex h-11 items-center rounded-xl bg-whatsapp px-4 font-semibold text-white" href={waLink(dealer.whatsapp, `Hi ${dealer.business_name}, I saw your storefront on ALL AUTO TT.`)}>WhatsApp</a>
-            <a className="inline-flex h-11 items-center rounded-xl bg-charcoal px-4 font-semibold text-white" href={telLink(dealer.phone)}>Call {formatPhone(dealer.phone)}</a>
-            <a className="inline-flex h-11 items-center rounded-xl border px-4 font-semibold" href={`/api/dealers/${dealer.slug}/flyer`}>Download flyer</a>
+          <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
+            <a className="inline-flex h-12 items-center justify-center rounded-xl bg-whatsapp px-4 text-base font-semibold text-white" href={waLink(dealer.whatsapp, `Hi ${dealer.business_name}, I saw your storefront on ALL AUTO TT.`)}>WhatsApp</a>
+            <a className="inline-flex h-12 items-center justify-center rounded-xl bg-charcoal px-4 text-base font-semibold text-white" href={telLink(dealer.phone)}>Call {formatPhone(dealer.phone)}</a>
+            <a className="inline-flex h-12 items-center justify-center rounded-xl border px-4 text-base font-semibold" href={`/api/dealers/${dealer.slug}/flyer`}>Download flyer</a>
           </div>
         </div>
 

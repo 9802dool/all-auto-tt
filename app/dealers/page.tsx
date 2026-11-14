@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SampleBadge } from "@/components/sample-badge";
 import { cachedDealers } from "@/lib/catalog";
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default async function DealersPage() {
               <div>
                 <h2 className="text-xl font-semibold">{dealer.business_name}</h2>
                 <p className="text-sm text-muted-foreground">{dealer.region} · {dealer.listings} live parts</p>
+                {dealer.example ? <span className="mt-1 inline-flex"><SampleBadge /></span> : null}
               </div>
             </div>
             <p className="mt-3 line-clamp-3 text-sm">{dealer.about}</p>

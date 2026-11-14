@@ -40,7 +40,7 @@ Shown on the sign-in page while Supabase is unset.
 
 ## Set this up on Vercel
 
-The live site already points at Supabase. Dealer sign-up, photos, and listings only stick when these three are set together. They are already on the Vercel project. If you create a new project, add them again.
+Dealer sign-up, photos, and listings only stick when these three are set together and the Supabase address is a real project. The address currently saved in Vercel, `qgictgitmszdccuvflup.supabase.co`, does not exist, so production cannot save dealers. Create a new Supabase project, run `supabase/schema.sql`, and replace the three values below. Until then the site shows the sample yards instead of going blank.
 
 | Variable | Where to find it | Required |
 | --- | --- | --- |

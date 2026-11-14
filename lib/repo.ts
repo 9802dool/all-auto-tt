@@ -221,10 +221,6 @@ async function ensureSampleRows(client: SupabaseClient, db: DB, seed: DB) {
   return changed;
 }
 
-function duringBuild() {
-  return process.env.NEXT_PHASE === "phase-production-build" || process.env.npm_lifecycle_event === "build";
-}
-
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -253,8 +249,7 @@ async function loadSupabase(): Promise<DB> {
     db = await readSupabaseWithRetry(client, seed);
   } catch (error) {
     console.error("[all-auto-tt] could not read Supabase:", error instanceof Error ? error.message : error);
-    if (duringBuild()) return seed;
-    throw error;
+    return seed;
   }
   try {
     await promoteConfiguredAdmin(client, db);
@@ -262,7 +257,6 @@ async function loadSupabase(): Promise<DB> {
     if (changed) db = await readSupabaseWithRetry(client, seed);
   } catch (error) {
     console.error("[all-auto-tt] sample yards were not saved:", error instanceof Error ? error.message : error);
-    if (duringBuild()) return db.parts.length ? db : seed;
   }
   return db;
 }
@@ -316,8 +310,17 @@ export async function commit<T>(fn: (db: DB) => T): Promise<T> {
     const before = await loadDb();
     const draft = structuredClone(before);
     const result = fn(draft);
-    if (usingSupabase()) await persistSupabase(before, draft);
-    else await persistLocal(draft);
+    if (usingSupabase()) {
+      try {
+        await persistSupabase(before, draft);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        if (/fetch failed|ENOTFOUND|getaddrinfo|EAI_AGAIN|network/i.test(message)) {
+          throw new ActionError("The parts database is not connected yet. The sample yard is still visible. Ask ALL AUTO TT to finish the Supabase setup, then try again.");
+        }
+        throw error;
+      }
+    } else await persistLocal(draft);
     return result;
   });
   queue = run.then(

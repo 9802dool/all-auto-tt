@@ -221,16 +221,48 @@ async function ensureSampleRows(client: SupabaseClient, db: DB, seed: DB) {
   return changed;
 }
 
+function duringBuild() {
+  return process.env.NEXT_PHASE === "phase-production-build" || process.env.npm_lifecycle_event === "build";
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function readSupabaseWithRetry(client: SupabaseClient, seed: DB) {
+  let last: unknown;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      return await readSupabase(client, seed);
+    } catch (error) {
+      last = error;
+      const message = error instanceof Error ? error.message : String(error);
+      const transient = /fetch failed|network|timeout|ECONN|ENOTFOUND|EAI_AGAIN/i.test(message);
+      if (!transient || attempt === 2) break;
+      await sleep(1000 * (attempt + 1));
+    }
+  }
+  throw last;
+}
+
 async function loadSupabase(): Promise<DB> {
   const client = adminClient();
   const seed = createSeed();
-  let db = await readSupabase(client, seed);
+  let db: DB;
+  try {
+    db = await readSupabaseWithRetry(client, seed);
+  } catch (error) {
+    console.error("[all-auto-tt] could not read Supabase:", error instanceof Error ? error.message : error);
+    if (duringBuild()) return seed;
+    throw error;
+  }
   try {
     await promoteConfiguredAdmin(client, db);
     const changed = await ensureSampleRows(client, db, seed);
-    if (changed) db = await readSupabase(client, seed);
+    if (changed) db = await readSupabaseWithRetry(client, seed);
   } catch (error) {
     console.error("[all-auto-tt] sample yards were not saved:", error instanceof Error ? error.message : error);
+    if (duringBuild()) return db.parts.length ? db : seed;
   }
   return db;
 }

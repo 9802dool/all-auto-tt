@@ -5,8 +5,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { getDealerForOwner, getUserById } from "@/lib/data";
-import { createSupabaseServer } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/supabase/env";
 
 const COOKIE = "aat_session";
 
@@ -73,12 +71,6 @@ export async function clearSession() {
 
 export async function getCurrentUser() {
   await connection();
-  if (isSupabaseConfigured()) {
-    const supabase = await createSupabaseServer();
-    const { data } = await supabase!.auth.getUser();
-    if (!data.user) return null;
-    return getUserById(data.user.id);
-  }
   const jar = await cookies();
   const token = jar.get(COOKIE)?.value;
   if (!token) return null;

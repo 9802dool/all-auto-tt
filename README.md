@@ -13,11 +13,11 @@ npm run dev
 
 Open [http://127.0.0.1:43123](http://127.0.0.1:43123).
 
-With Supabase variables left empty, the first page load writes `data/db.json` (gitignored) with 4 sample dealers and 44 sample parts. Photos in `public/parts` and `public/dealers` are sample imagery. Uploaded photos in the local demo stay in the browser session until Supabase is configured.
+The first page load writes `data/db.json` (gitignored) with 4 sample dealers and 45 sample parts. Photos in `public/parts` and `public/dealers` are sample pictures. On your computer, new photos are saved in `public/uploads`.
 
 ### Demo logins
 
-Shown on the sign-in page while Supabase is unset.
+Shown on the sign-in page when you run the site on your computer. These same logins work on the live site after the file store is connected, because the sample yards are copied there.
 
 | Who | Email | Password |
 | --- | --- | --- |
@@ -40,43 +40,45 @@ Shown on the sign-in page while Supabase is unset.
 
 ## Set this up on Vercel
 
-The live site already points at Supabase. Dealer sign-up, photos, and listings only stick when these three are set together. They are already on the Vercel project. If you create a new project, add them again.
+The site does not use Supabase. Shops, parts, and photos are saved in **Vercel Blob**, which is free on the Hobby plan (about 1 GB of files). You do not pay extra. If that free amount is used up, Blob pauses until the next month. It does not charge you.
 
-| Variable | Where to find it | Required |
+The sample yards are built into the site, so the homepage still shows parts even before Blob is connected. Saving a new shop or a new photo needs Blob.
+
+You can remove these old values if they are still in the project. They are not used:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+| Variable | What it is | Required |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API → Project URL | Yes, for real accounts |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Same page. Use the publishable key or the legacy anon key. | Yes, for real accounts |
-| `SUPABASE_SERVICE_ROLE_KEY` | Same page. Secret key or legacy service_role key. Server only. Never put this in the browser or in git. | Yes, for real accounts |
+| `BLOB_READ_WRITE_TOKEN` | Added for you when you create the Blob store below. Do not type this by hand. | Yes, to save shops and photos |
 | `NEXT_PUBLIC_SITE_URL` | The public address, for example `https://all-auto-tt-bice.vercel.app` | Yes |
-| `SESSION_SECRET` | Any long random string. Used when Supabase is not configured. | Yes in production |
-| `ADMIN_EMAIL` | The email you sign up with. That account becomes the admin. Defaults to `allautott@gmail.com` if this is empty. | Recommended |
-| `CRON_SECRET` | Long random string. Protects the daily maintenance job. | Recommended |
+| `SESSION_SECRET` | A long random password the site uses to keep people signed in. | Yes |
+| `ADMIN_EMAIL` | The email you sign up with. That person can open the admin page. If empty, it is `allautott@gmail.com`. | Recommended |
+| `CRON_SECRET` | A long random password for the daily cleanup job. | Recommended |
 | `RESEND_API_KEY` | Optional. Without it, emails stay in the admin outbox. | No |
-| `EMAIL_FROM` | From address for Resend. | No |
-| `NEXT_PUBLIC_GA_ID` | GA4 id, `G-…`. The script is left out when this is empty. | No |
+| `EMAIL_FROM` | From address for those emails. | No |
+| `NEXT_PUBLIC_GA_ID` | Google Analytics id. Left out when empty. | No |
 | `NEXT_PUBLIC_FB_PIXEL_ID` | Facebook pixel. Left out when empty. | No |
 
-Leave all three Supabase values empty to use the local sample yard on your computer.
+### Connect the free file store
 
-### First-time Supabase setup
+Do this once. It takes about a minute.
 
-1. Create a Supabase project.
-2. Open the SQL editor, paste `supabase/schema.sql`, and run it. That creates the tables, the photo bucket named `media`, and the rules that keep dealers out of each other's stock.
-3. In Authentication → Providers → Email, you can leave email confirmation on. Sign-up still creates the shop. The person confirms, then signs in.
-4. Add the three Supabase values, `NEXT_PUBLIC_SITE_URL`, `SESSION_SECRET`, and `ADMIN_EMAIL` in Vercel. Redeploy.
-5. Open the site once. If there are no real dealers yet, the app saves the sample yards (marked Sample) so search is not empty.
-6. Sign up at `/dealer/signup` with `ADMIN_EMAIL` (or `allautott@gmail.com` if you did not set it). That account can open `/admin`.
-7. Approve or reject shops at `/admin/dealers`. Remove a bad part at `/admin/listings`.
+1. Open [the All Auto TT project on Vercel](https://vercel.com/simeon-doolarsinghs-projects/all-auto-tt).
+2. Click the **Storage** tab.
+3. Click **Create Database** or **Create Store**, then choose **Blob**.
+4. Name it `all-auto-tt`. Leave the access as **Private** if you see that choice.
+5. Connect it to this project. Vercel fills in `BLOB_READ_WRITE_TOKEN` for you.
+6. Redeploy the site (Deployments → the latest production deploy → Redeploy).
+7. Open the homepage. The sample yards are there. The first save copies them into Blob so they are not lost when the site restarts.
+8. Sign in as `admin@allautott.example` with the password in the table above, or sign up at `/dealer/signup` with `allautott@gmail.com`. That signup can open `/admin`.
+9. Approve or reject shops at `/admin/dealers`. Remove a bad part at `/admin/listings`.
 
-If that email already has an account, open the site after deploy. The app promotes it to admin. You can also run this in the SQL editor:
+Dealers edit only their own shop and parts. They cannot approve themselves or change their plan. The site does not take payment for parts. Buyers still WhatsApp or call the dealer and pay on pickup.
 
-```sql
-select public.grant_admin('you@example.com');
-```
-
-Sample dealer logins such as `akeem@centralparts.example` work only on the local demo. They are not real Supabase users. Buyers keep seeing the sample parts, marked Sample, after a real dealer joins. Delete one from Admin → Parts if you do not want it on the site. Once a real dealer exists, the app does not add more samples.
-
-Dealers can update their own shop and listings. They cannot change their own approval, plan, or featured flags. Photos go in the public `media` bucket. The site does not take payment for parts.
+The practice admin password is written in this README. After you are signed in, you can also sign up with your own email so that account is an admin too.
 
 ## Vercel
 
